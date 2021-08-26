@@ -1,5 +1,5 @@
 # Laravel Judge0
-Judge0 API integration for running/judging code with different languages
+Judge0 API integration for `running/judging` code with different languages
 ```php
 // An example will be added soon
 ```

@@ -8,9 +8,4 @@ class Judge0
     {
         
     }
-
-    public function facadeLoaded()
-    {
-        return true;
-    }
 }
