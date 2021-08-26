@@ -1,0 +1,55 @@
+{
+    "name": "mouadbnl/laravel-judge0",
+    "description": "Support for Judge0 API to run/judge code in different languages",
+    "license": "MIT",
+    "keywords": [
+        "Mouadbnl", "laravel", "laravel-judge0", "Online judge", "Code execution"
+    ],
+    "authors": [
+        {
+            "name": "MouadBNL",
+            "email": "mouadbnl.2k01@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.0|^7.4",
+        "guzzlehttp/guzzle": "^7.3",
+        "illuminate/support": "^8.0",
+        "illuminate/contracts": "^6.0|^7.0|^8.0",
+        "illuminate/auth": "^6.0|^7.0|^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.15",
+        "phpunit/phpunit": "^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mouadbnl\\Judge0\\": "src",
+            "Mouadbnl\\Judge0\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mouadbnl\\Judge0\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mouadbnl\\Judge0\\Judge0ServiceProvider"
+            ],
+            "aliases": {
+                "Judge0": "Mouadbnl\\Judge0\\Facades\\Judge0"
+            }
+        }
+    }
+}
