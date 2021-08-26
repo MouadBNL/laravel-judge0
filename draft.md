@@ -104,6 +104,11 @@ class SubmissionParams
         $this->wait = $params['wait'] ?? config('judge0.wait');
         $this->fields = $params['fields'] ?? config('judge0.fields');
     }
+
+    public static init(array $params): self
+    {
+        return new self($params);
+    }
 }
 ```
 
