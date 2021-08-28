@@ -35,35 +35,16 @@ class Judge0InstanceAPIService
         }
     }
 
-    function postSubmission(
-        string  $source_code,
-        int     $language_id,
-        ?string $stdin = null,
-        ?string $expected_output = null,
-        ?SubmissionConfig $config = null,
-        ?SubmissionParams $params = null	
-    )
+    function postSubmission()
     {
-        $config = ($config instanceof SubmissionConfig) ? $config : SubmissionConfig::init();
-        $params = ($params instanceof SubmissionParams) ? $params : SubmissionParams::init();
         $endpoint = $this->endpoints['postSubmission'];
 
-        $submission = Judge0Submission::validate([
-            'source_code' => $source_code,
-            'language_id' => $language_id,
-            'stdin'       => $stdin,
-            'expected_output' => $expected_output
-        ]);
-
-        if($params->base64) $submission = Judge0Submission::formatToBase64($submission);
-        dump($params->getUrl());
-
-        return $this->sendRequest($endpoint['method'], $endpoint['uri'] . $params->getUrl(), [
-            'json' => array_merge(
-                $submission,
-                $config->getConfig()
-            )
-        ]);
+        // return $this->sendRequest($endpoint['method'], $endpoint['uri'] . $params->getUrl(), [
+        //     'json' => array_merge(
+        //         $submission,
+        //         $config->getConfig()
+        //     )
+        // ]);
     }
 
     protected function formatResponse(Response $res)

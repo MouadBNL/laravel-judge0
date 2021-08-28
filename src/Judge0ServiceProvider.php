@@ -32,7 +32,9 @@ class Judge0ServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/judge0.php' => config_path('udge0.php'),
-            ], 'config');
+            ], 'judge0-config');
         }
+
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 }

@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateJudge0Tables extends Migration
+{
+    public function up()
+    {
+        Schema::create('submissions', function (Blueprint $table) {
+            $table->id();
+
+            // $table->morphs('submitter');
+            $table->integer("language_id");
+            $table->string("language")->nullable();
+            $table->longText("source_code");
+            $table->longText("stdin")->nullable();
+            $table->longText("stderr")->nullable();
+            $table->longText("stdout")->nullable();
+            $table->longText("expected_output")->nullable();
+            $table->longText("compile_output")->nullable();
+            $table->string("time")->nullable();
+            $table->string("memory")->nullable();
+
+            $table->json("config")->nullable();
+            $table->json("params")->nullable();
+
+            $table->timestamps();
+        });
+    }
+};

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mouadbnl\Judge0\Tests\Unit;
+namespace Mouadbnl\Judge0\Tests\Feature;
 
 use Mouadbnl\Judge0\Facades\Judge0;
 use Mouadbnl\Judge0\Tests\TestCase;
