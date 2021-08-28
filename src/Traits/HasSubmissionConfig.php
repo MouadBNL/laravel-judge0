@@ -33,4 +33,9 @@ trait HasSubmissionConfig
         $this->config->set($key, $value);
         return $this;
     }
+
+    public function getConfig()
+    {
+        return $this->config->getConfig();
+    }
 }

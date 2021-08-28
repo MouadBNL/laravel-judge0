@@ -33,4 +33,9 @@ trait HasSubmissionParams
         $this->params->set($key, $value);
         return $this;
     }
+
+    public function getParams()
+    {
+        return $this->params->getParams();
+    }
 }

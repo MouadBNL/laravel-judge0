@@ -17,4 +17,24 @@ class SubmissionTest extends TestCase
 
         $this->assertTrue($submission->exists);
     }
+
+    /** @test */
+    public function it_contains_submission_config()
+    {
+        $config = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->getConfig();
+        $this->assertNotNull($config);
+    }
+
+    /** @test */
+    public function it_contains_submission_params()
+    {
+        $params = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->getParams();
+        $this->assertNotNull($params);
+    }
 }

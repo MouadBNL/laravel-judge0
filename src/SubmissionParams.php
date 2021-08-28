@@ -33,6 +33,15 @@ class SubmissionParams
         return $this;
     }
 
+    public function getParams()
+    {
+        return [
+            'base64' => $this->base64,
+            'wait' => $this->wait,
+            'fields' => $this->fields
+        ];
+    }
+
     public function getUrl()
     {
         $params = [
