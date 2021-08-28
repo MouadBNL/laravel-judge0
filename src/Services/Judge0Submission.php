@@ -45,55 +45,9 @@ class Judge0Submission
         $this->params = SubmissionParams::init();
     }
 
-    /**
-     * Allow for both syntaxes
-     * setConfig('abc', 'efg');
-     * setConfig([
-     *  'abc' => 'efg',
-     *  'uvw' => 'xyz'
-     * ]);
-     */
-    public function setConfig($key, $value = null)
-    {
-        if(is_array($key))
-        {
-            foreach ($key as $k => $v) {
-                $this->config->set($k, $v);
-            }
-            return $this;
-        } 
-        if(! is_string($key)){
-            throw new InvalidArgumentException("key must be a string");
-        } 
-        
-        $this->config->set($key, $value);
-        return $this;
-    }
+    
 
-    /**
-     * Allow for both syntaxes
-     * setParams('abc', 'efg');
-     * setParams([
-     *  'abc' => 'efg',
-     *  'uvw' => 'xyz'
-     * ]);
-     */
-    public function setParams($key, $value = null)
-    {
-        if(is_array($key))
-        {
-            foreach ($key as $k => $v) {
-                $this->params->set($k, $v);
-            }
-            return $this;
-        } 
-        if(! is_string($key)){
-            throw new InvalidArgumentException("key must be a string");
-        } 
-        
-        $this->params->set($key, $value);
-        return $this;
-    }
+
 
     public function setLanguageId(int $id)
     {
