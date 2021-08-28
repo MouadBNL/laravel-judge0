@@ -14,14 +14,14 @@ class SubmissionConfigTest extends TestCase
         $conf = SubmissionConfig::init([
             'cpu_time_limit' => 1.2
         ]);
-        $this->assertEquals(1.2, $conf->cpu_time_limit);
+        $this->assertEquals(1.2, $conf->getConfig('cpu_time_limit'));
     }
 
     /** @test */
     public function submissionconfig_can_set_value_after_instantiating()
     {
         $conf = SubmissionConfig::init()->set('cpu_time_limit', 1.2);
-        $this->assertEquals(1.2, $conf->cpu_time_limit);
+        $this->assertEquals(1.2, $conf->getConfig('cpu_time_limit'));
     }
 
     /** @test */
@@ -31,7 +31,7 @@ class SubmissionConfigTest extends TestCase
         $this->assertInstanceOf(SubmissionConfig::class, $conf);
         $conf->set('cpu_time_limit', 1.2);
         $this->assertInstanceOf(SubmissionConfig::class, $conf);
-        $this->assertEquals(1.2, $conf->cpu_time_limit);
+        $this->assertEquals(1.2, $conf->getConfig('cpu_time_limit'));
     }
 
     /** @test */

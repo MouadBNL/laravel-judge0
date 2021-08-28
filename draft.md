@@ -145,7 +145,16 @@ Judge0::postSubmission(
     SubmissionParams $params	
 );
 ```
-
+A better way to send a submission
+```php
+Judge::submission($source_code, $language_id)
+    ->setConfig($key, $value)
+    ->setConfig([
+        'key' => 'value',
+    ])
+    ->setParams($key => $value)
+    ->submit();
+```
 ### Getting a submission
 ```php
 // Token will be provided when sending a submission and will be stored in tthe database

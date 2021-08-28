@@ -32,4 +32,20 @@ class SubmissionParams
         $this->$key = $value;
         return $this;
     }
+
+    public function getUrl()
+    {
+        $params = [
+            'base64_encoded' => ($this->base64 ? 'true' : 'false'),
+            'wait' => ($this->wait ? 'true' : 'false'),
+            'feilds' => (isset($this->fields) && $this->fields !='*') ? '&feilds=' . $this->fields : ''
+        ];
+        return '?' . implode('&', array_map(
+            function($k, $v){
+                return $k . '=' . $v;
+            },
+            $params,
+            array_keys($params)
+        ));
+    }
 }

@@ -13,4 +13,16 @@ class Judge0InstanceTest extends TestCase
         $res = Judge0::authenticate();
         $this->assertEquals(200, $res['code']);    
     }
+
+    /** @test */
+    public function it_can_send_post_submission()
+    {
+        $res = Judge0::postSubmission(
+            "print('hello world')",
+            70, null, null,
+        );
+
+        $this->assertArrayHasKey('code', $res);
+        $this->assertEquals(201, $res['code']);
+    }
 }
