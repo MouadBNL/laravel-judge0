@@ -185,6 +185,12 @@ return [
         'command_line_arguments' => null,
         //Additional files that should be available alongside the source code in base64.
         'additional_files' => null,
+    ],
+
+    'submission_params' => [
+        'base64' => true,
+        'wait' => false,
+        'fields' => '*'
     ]
 
 ];
