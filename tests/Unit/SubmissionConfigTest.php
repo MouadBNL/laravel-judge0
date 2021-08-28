@@ -9,7 +9,7 @@ use Mouadbnl\Judge0\Tests\TestCase;
 class SubmissionConfigTest extends TestCase
 {
     /** @test */
-    public function it_can_create_an_instance_from_static_contructor()
+    public function submissionconfig_can_create_an_instance_from_static_contructor()
     {
         $conf = SubmissionConfig::init([
             'cpu_time_limit' => 1.2
@@ -18,14 +18,14 @@ class SubmissionConfigTest extends TestCase
     }
 
     /** @test */
-    public function it_can_set_value_after_instantiating()
+    public function submissionconfig_can_set_value_after_instantiating()
     {
         $conf = SubmissionConfig::init()->set('cpu_time_limit', 1.2);
         $this->assertEquals(1.2, $conf->cpu_time_limit);
     }
 
     /** @test */
-    public function set_returns_itself()
+    public function submissionconfig_set_returns_itself()
     {
         $conf = SubmissionConfig::init();
         $this->assertInstanceOf(SubmissionConfig::class, $conf);
@@ -35,7 +35,7 @@ class SubmissionConfigTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_error_on_set_if_key_does_not_exist()
+    public function submissionconfig_throws_error_on_set_if_key_does_not_exist()
     {
         $this->expectException(InvalidArgumentException::class);
         $conf = SubmissionConfig::init()->set('test', 1.2);
