@@ -90,6 +90,15 @@ class SubmissionConfig
     {
         return new self($config);
     }
+
+    public function set(string $key, string $value)
+    {
+        if(! property_exists(Self::class, $key)){
+            throw new Exception("Error property '" . $key . "' not found");
+        }
+
+        $this->$key = $value;
+    }
 }
 ```
 
@@ -101,7 +110,7 @@ class SubmissionParams
     public 	bool	$wait = false;
     public 	string 	$fields = "*";
 
-    public function __construct(array $params)
+    public function __construct(array $params = [])
     {
         $this->base64 = $params['base64'] ?? config('judge0.base64');
         $this->wait = $params['wait'] ?? config('judge0.wait');
@@ -111,6 +120,15 @@ class SubmissionParams
     public static init(array $params): self
     {
         return new self($params);
+    }
+
+    public function set(string $key, string $value)
+    {
+        if(! property_exists(Self::class, $key)){
+            throw new Exception("Error property '" . $key . "' not found");
+        }
+
+        $this->$key = $value;
     }
 }
 ```
