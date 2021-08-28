@@ -8,7 +8,13 @@ class CreateJudge0Tables extends Migration
 {
     public function up()
     {
-        Schema::create('submissions', function (Blueprint $table) {
+        $tables = config('judge0.table_names');
+
+        if (empty($tables)) {
+            throw new \Exception('Can not load table_names from config/judge0.php. Run [php artisan config:clear] and try again.');
+        }
+
+        Schema::create($tables['submissions'], function (Blueprint $table) {
             $table->id();
 
             // $table->morphs('submitter');

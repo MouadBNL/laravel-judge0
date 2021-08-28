@@ -191,6 +191,10 @@ return [
         'base64' => true,
         'wait' => false,
         'fields' => '*'
+    ],
+
+    'table_names' => [
+        'submissions' => 'submissions'
     ]
 
 ];
