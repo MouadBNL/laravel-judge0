@@ -158,13 +158,13 @@ I dont really see a need for deleting anything on judge0 for now, so this will b
 Judge0::deleteSubmission(string $token);
 ```
 --------------------------------------------------------------------------------------------------------------------------------
-## Handling bached submissions
+## Handling batched submissions
 
-### Send bached submissions
+### Send batched submissions
 I would probably never use this, I am not even sure I can send an expected output with that.
 but if It can send it, it could be pretty usefull for running mutiple testcases, although it would be hard to keep track which test case faild, and it will also run all test cases which is not needed.
 ```php
-Judge0::postBachedSubmissions(
+Judge0::postBatchedSubmissions(
     Array $submissions = [
         (object) [
             'source_code' => string,
@@ -182,17 +182,17 @@ Judge0::postBachedSubmissions(
 );
 ```
 
-### Get bached submission
+### Get batched submission
 I could not even use this, since all submissions will be stored in the laravel database.
 but it could be helpful if I want retrive some advanced fileds about a bach of submissions.
 ```php
-Judge0::getBachedSubmissions(Array $tokens, SubmissionParams $params);
+Judge0::getBatchedSubmissions(Array $tokens, SubmissionParams $params);
 ```
 
-### Delete bached submissions
+### Delete batched submissions
 Same as deleting a single submission, I dont see the point of deleting the submissions on Judge0.
 ```php
-Judge0::deleteBachedSubmissions(Array $tokens);
+Judge0::deleteBatchedSubmissions(Array $tokens);
 ```
 --------------------------------------------------------------------------------------------------------------------------------
 ## Authenticate

@@ -43,7 +43,7 @@ interface Judge0Interface
 
     public function deleteSubmission(string $token);
 
-    public function postBachedSubmissions(
+    public function postBatchedSubmissions(
         Array $submissions,
         string  $source_code,
         int     $language_id,
@@ -53,9 +53,9 @@ interface Judge0Interface
         SubmissionParams $params	
     );
 
-    public function getBachedSubmissions(Array $tokens, SubmissionParams $params);
+    public function getBatchedSubmissions(Array $tokens, SubmissionParams $params);
 
-    public function deleteBachedSubmissions(Array $tokens);
+    public function deleteBatchedSubmissions(Array $tokens);
 
 
     /*
@@ -87,7 +87,9 @@ interface Judge0Interface
 
     public function getAbout();
 
-    public function getStatus();
+    public function getStatuses();
+
+    public function getConfig();
 
     public function getStatistics();
 
