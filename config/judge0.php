@@ -23,7 +23,7 @@ return [
             'endpoints' => [
                 'authenticate' => [
                     'method' => 'GET',
-                    'uri','/rapidapi'
+                    'uri' => '/rapidapi'
                 ],
 
 
@@ -84,7 +84,7 @@ return [
             'endpoints' => [
                 'authenticate' => [
                     'method' => 'POST',
-                    'uri','/authenticate'
+                    'uri' => '/authenticate'
                 ],
 
 
