@@ -1,11 +1,17 @@
 <?php
+
+use Mouadbnl\Judge0\Services\Judge0InstanceAPIService;
+use Mouadbnl\Judge0\Services\Judge0RapidapiService;
+
 return [
 
-    'default' => '',
+    'default' => 'instance',
 
     'drivers' => [
 
         'rapidapi' => [
+
+            'class' => Judge0RapidapiService::class,
 
             'base_uri' => env('JUDGE0_RAPIDAPI_BASE_URI', 'https://judge0-ce.p.rapidapi.com'),
 
@@ -66,6 +72,8 @@ return [
         ],
 
         'instance' => [
+
+            'class' => Judge0InstanceAPIService::class,
 
             'base_uri' => env('JUDGE0_BASE_URI', 'localhost:2358'),
 
