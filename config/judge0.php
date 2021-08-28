@@ -164,6 +164,27 @@ return [
             ]
         ],
 
+    ],
+
+    'submission_config' => [
+        'cpu_time_limit' => 2,
+        'cpu_extra_time' => 1,
+        'wall_time_limit' => 10,
+        'memory_limit' => 256000,
+        'stack_limit' => 64000,
+        'max_processes_and_or_threads' => 120,
+        'enable_per_process_and_thread_time_limit' => false,
+        'enable_per_process_and_thread_memory_limit' => false,
+        'max_file_size' => 4096,
+        'redirect_stderr_to_stdout' => false,
+        'enable_network' => false,
+        'number_of_runs' => 1,
+        // will send a PUT request with the submission in the body
+        'callback_url' => null,
+        'compiler_options' => null,
+        'command_line_arguments' => null,
+        //Additional files that should be available alongside the source code in base64.
+        'additional_files' => null,
     ]
 
 ];
