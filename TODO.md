@@ -1,7 +1,7 @@
 # TODO
 
 ## Submission model
-- setting params and config in database.
 - adding setStdin and setExpectedOutput.
+- adding a good api for setting timeLimit and memoryLimit.
 - Separating Judge0Submission to more appropriate classes.
 - finishing the new postSubmission API.
