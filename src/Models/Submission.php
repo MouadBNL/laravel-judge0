@@ -42,8 +42,10 @@ class Submission extends Model
 
     public function setConfigAttribute($config)
     {
-        if(! $config instanceof SubmissionConfig)
+        if(! $config instanceof SubmissionConfig){
             throw new Exception("The config attribute must be an instance of " . SubmissionConfig::class . ".");
+        }
+
         $this->attributes['config'] = json_encode($config->getConfig());
     }
 
@@ -52,9 +54,13 @@ class Submission extends Model
         return  json_decode($this->getAttributes()['params'], true);
     }
 
-    public function setParamsAttribute()
+    public function setParamsAttribute($params)
     {
-        throw new Exception("Can not set params directly in the attribute, please use setParams() on you model");
+        if(! $params instanceof SubmissionParams){
+            throw new Exception("The params attribute must be an instance of " . SubmissionParams::class . ".");
+        }
+
+        $this->attributes['params'] = json_encode($params->getParams());
     }
 
     /**
@@ -85,6 +91,38 @@ class Submission extends Model
         $config->set($key, $value);
         $this->update([
             'config' => $config
+        ]);
+        return $this;
+    }
+
+    /**
+     * Allow for both syntaxes
+     * setParams('abc', 'efg');
+     * setParams([
+     *  'abc' => 'efg',
+     *  'uvw' => 'xyz'
+     * ]);
+     */
+    public function setParams($key, $value = null)
+    {
+        $params = SubmissionParams::init($this->getParamsAttribute());
+        if(is_array($key))
+        {
+            foreach ($key as $k => $v) {
+                $params->set($k, $v);
+            }
+            $this->update([
+                'params' => $params
+            ]);
+            return $this;
+        } 
+        if(! is_string($key)){
+            throw new InvalidArgumentException("key must be a string");
+        } 
+        
+        $params->set($key, $value);
+        $this->update([
+            'params' => $params
         ]);
         return $this;
     }

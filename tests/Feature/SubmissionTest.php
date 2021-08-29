@@ -72,6 +72,22 @@ class SubmissionTest extends TestCase
         $this->assertEquals(8.4, $submission->config['cpu_time_limit']);
     }
 
+    /** @test */
+    public function it_can_set_params_via_setParams()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->setParams('base64', false);
+
+        $this->assertEquals(false, $submission->params['base64']);
+
+        $submission->setParams([
+            'wait' => true
+        ]);
+        $this->assertEquals(true, $submission->params['wait']);
+    }
+
     // /** @test */
     // public function it_contains_submission_config()
     // {
