@@ -81,14 +81,11 @@ class SubmissionTest extends TestCase
             ->setExpectedOutput('the value you entered is : judge0')
             ->setTimeLimit(1) // seconds
             ->setMemoryLimitInMegabytes(256);
-        $res = $submission->submit();
-        dump($res);
+        $submission->submit();
         sleep(2);
 
-        $res = $submission->retrieveFromJudge();
+        $submission->retrieveFromJudge();
         
-        dump($res);
-
         $this->assertEquals('Accepted', $submission->status->description);
     }
 
