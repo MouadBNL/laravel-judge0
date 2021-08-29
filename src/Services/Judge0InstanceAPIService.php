@@ -3,6 +3,7 @@
 namespace Mouadbnl\Judge0\Services;
 
 use Closure;
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
@@ -73,10 +74,12 @@ class Judge0InstanceAPIService
     protected function sendRequest(string $method, string $uri, array $options = [])
     {
         try {
-            $res = $this->client->request($method, $uri, $options);
-            return $this->formatResponse($res);
+            return $this->formatResponse(
+                $this->client->request($method, $uri, $options)
+            );
         } catch (ClientException $e) {
-            return $this->formatClientException($e);
+            throw $e;
+            // return $this->formatClientException($e);
         }
     }
 }
