@@ -43,29 +43,20 @@ class SubmissionTest extends TestCase
             'language_id' => 71,
             'source_code' => "print('hello world')"
         ]);
-        $token = $submission->submit()['content']['token'];
+        $res = $submission->submit();
+
+        $this->assertEquals(201, $res['code']);
+        $this->assertEquals(0, $submission->status->id);
+        $this->assertEquals($res['content']['token'], $submission->token);
+
         sleep(1);
         $res = $submission->retrieveFromJudge();
-        $sts = $submission->status;
-        dump($sts);
-        // $submission = Submission::create([
-        //     'language_id' => 71,
-        //     'source_code' => "print('hello world')"
-        // ]);
-        // $res = $submission->submit();
-        // $this->assertEquals(201, $res['code']);
-        // $this->assertEquals($res['content']['token'], $submission->token);
+        
 
-        // // Give time to Judge0 to judge the submission
-        // sleep(1);
-
-        // $res = $submission->retrieveFromJudge();
-        // $submission->refresh();
-        // dump($submission->status);
-        // $this->assertEquals($submission->token, $res['content']['token']);
-        // $this->assertEquals(200, $res['code']);
-        // $this->assertEquals(3, $submission->status->id);
-        // $this->assertEquals("Accepted", $submission->status->description);
+        $this->assertEquals($submission->token, $res['content']['token']);
+        $this->assertEquals(200, $res['code']);
+        $this->assertEquals(3, $submission->status->id);
+        $this->assertEquals("Accepted", $submission->status->description);
     }
 
     /** @test */
