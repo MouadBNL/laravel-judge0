@@ -5,6 +5,7 @@ namespace Mouadbnl\Judge0\Models;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
+use Mouadbnl\Judge0\Facades\Judge0;
 use Mouadbnl\Judge0\Services\SubmissionConfig;
 use Mouadbnl\Judge0\Services\SubmissionParams;
 
@@ -29,6 +30,25 @@ class Submission extends Model
     public function getTable()
     {
         return config('judge0.table_names.submissions', parent::getTable());
+    }
+
+    public function submit()
+    {
+        $res = Judge0::postSubmission($this);
+        if(isset($res['content']['token'])){
+            $this->update(['token' => $res['content']['token']]);
+        }
+        return $res;
+    }
+
+    public static function retrieve(string $token)
+    {
+        return Judge0::getSubmission($token);
+    }
+
+    public function retrieveFromJudge()
+    {
+        return self::retrieve($this->token);
     }
 
     public function setTimeLimit(float $seconds)
@@ -192,4 +212,18 @@ class Submission extends Model
     | 
     |--------------------------------------------------------------------------
     */
+
+    public function getAllAttributes()
+    {
+        return array_merge(
+            $this->attributes,
+            $this->getConfigAttribute(),
+            $this->getParamsAttribute()
+        );
+    }
+
+    public function getParamsUrl()
+    {
+        return SubmissionParams::init($this->getParamsAttribute())->getUrl();
+    }
 }

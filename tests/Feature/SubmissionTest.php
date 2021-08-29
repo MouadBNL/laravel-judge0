@@ -37,6 +37,25 @@ class SubmissionTest extends TestCase
     }
 
     /** @test */
+    public function it_can_submit_itself()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ]);
+        $res = $submission->submit();
+        $this->assertEquals(201, $res['code']);
+        $this->assertEquals($res['content']['token'], $submission->token);
+
+        // Give time to Judge0 to judge the submission
+        sleep(1);
+
+        $res = $submission->retrieveFromJudge();
+        $this->assertEquals($submission->token, $res['content']['token']);
+        $this->assertEquals(200, $res['code']);
+    }
+
+    /** @test */
     public function it_can_not_set_config_directly()
     {
         $this->expectException(Exception::class);

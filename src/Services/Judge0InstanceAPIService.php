@@ -6,6 +6,7 @@ use Closure;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
+use Mouadbnl\Judge0\Models\Submission;
 use Mouadbnl\Judge0\SubmissionConfig;
 use Mouadbnl\Judge0\SubmissionParams;
 
@@ -35,16 +36,23 @@ class Judge0InstanceAPIService
         }
     }
 
-    function postSubmission()
+    function postSubmission(Submission $submission, array $options = [])
     {
         $endpoint = $this->endpoints['postSubmission'];
 
-        // return $this->sendRequest($endpoint['method'], $endpoint['uri'] . $params->getUrl(), [
-        //     'json' => array_merge(
-        //         $submission,
-        //         $config->getConfig()
-        //     )
-        // ]);
+        return $this->sendRequest($endpoint['method'], $endpoint['uri'] . $submission->getParamsUrl(), [
+            'json' => array_merge(
+                $submission->getAllAttributes(),
+                $options
+            )
+        ]);
+    }
+
+    public function getSubmission(string $token)
+    {
+        $endpoint = $this->endpoints['getSubmission'];
+        $uri = str_replace("{token}", $token, $endpoint['uri']);
+        return $this->sendRequest($endpoint['method'], $uri);
     }
 
     protected function formatResponse(Response $res)
@@ -62,7 +70,7 @@ class Judge0InstanceAPIService
         ];
     }
 
-    protected function sendRequest(string $method, string $uri, array $options)
+    protected function sendRequest(string $method, string $uri, array $options = [])
     {
         try {
             $res = $this->client->request($method, $uri, $options);
