@@ -131,7 +131,7 @@ class SubmissionTest extends TestCase
     }
 
     /** @test */
-    public function it_can_submission_without_base64()
+    public function it_can_submit_without_base64()
     {
         $submission = Submission::create([
             'language_id' => 71,
@@ -141,6 +141,18 @@ class SubmissionTest extends TestCase
         $this->assertEquals(201, $res['code']);
         sleep(2);
         $submission->retrieveFromJudge();
+        $this->assertEquals('Accepted', $submission->status->description);    
+    }
+
+    /** @test */
+    public function it_can_submit_with_wait()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->setParams('base64', false)
+        ->setParams('wait', true);
+        $submission->submit();
         $this->assertEquals('Accepted', $submission->status->description);    
     }
 }

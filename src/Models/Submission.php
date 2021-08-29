@@ -49,6 +49,11 @@ class Submission extends Model
                 'token' => $res['content']['token'],
             ]);
         }
+        if(isset($res['content']['status'])){
+            $this->update([
+                'status' => $res['content']['status']
+            ]);
+        }
         return $res;
     }
 
