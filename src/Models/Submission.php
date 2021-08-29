@@ -71,6 +71,24 @@ class Submission extends Model
         return $this;
     }
 
+    public function setStdin(?string $input)
+    {
+        $this->update(['stdin' => $input]);
+        return $this;
+    }
+
+    public function setInput(?string $input)
+    {
+        $this->setStdin($input);
+        return $this;
+    }
+
+    public function setExpectedOutput(?string $output)
+    {
+        $this->update(['expected_output' => $output]);
+        return $this;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Managing config and params

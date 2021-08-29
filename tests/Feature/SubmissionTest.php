@@ -124,6 +124,36 @@ class SubmissionTest extends TestCase
         $this->assertEquals(config('judge0.submission_config.memory_limit'), $submission->config['memory_limit']);
     }
 
+    /** @test */
+    public function it_can_set_stdin()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ]);
+
+        $submission->setStdin("judge0");
+        $this->assertEquals('judge0', $submission->stdin);
+
+        $submission->setInput("0egduj");
+        $this->assertEquals('0egduj', $submission->stdin);
+    }
+
+    /** @test */
+    public function it_can_set_expected_output()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ]);
+
+        $submission->setInput("judge0")
+                ->setExpectedOutput("judge0");
+        $this->assertEquals('judge0', $submission->expected_output);
+
+        $this->assertEquals('judge0', $submission->stdin);
+    }
+
     // /** @test */
     // public function it_contains_submission_config()
     // {
