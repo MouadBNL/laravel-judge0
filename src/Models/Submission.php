@@ -34,8 +34,42 @@ class Submission extends Model
     {
         return config('judge0.table_names.submissions', parent::getTable());
     }
-    
 
+    public function setTimeLimit(float $seconds)
+    {
+        $this->setConfig('cpu_time_limit', $seconds);
+        return $this;
+    }
+
+    public function setTimeLimitInMilliseconds(float $milliseconds)
+    {
+        $this->setConfig('cpu_time_limit', $milliseconds * 0.001);
+        return $this;
+    }
+
+    public function setDefaultTimeLimit()
+    {
+        $this->setTimeLimit(config('judge0.submission_config.cpu_time_limit'));
+        return $this;
+    }
+
+    public function setMemoryLimit(float $kilobyte)
+    {
+        $this->setConfig('memory_limit', $kilobyte);
+        return $this;
+    }
+
+    public function setMemoryLimitInMegabytes(float $megabytes)
+    {
+        $this->setConfig('memory_limit', $megabytes * 1024);
+        return $this;
+    }
+
+    public function setDefaultMemoryLimit()
+    {
+        $this->setMemoryLimit(config('judge0.submission_config.memory_limit'));
+        return $this;
+    }
 
     /*
     |--------------------------------------------------------------------------
