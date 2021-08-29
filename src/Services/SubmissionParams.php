@@ -51,7 +51,7 @@ class SubmissionParams
         ];
         return '?' . implode('&', array_map(
             function($k, $v){
-                return $k . '=' . $v;
+                return $v . '=' . $k;
             },
             $params,
             array_keys($params)

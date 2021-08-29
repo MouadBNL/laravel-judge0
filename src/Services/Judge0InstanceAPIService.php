@@ -40,7 +40,6 @@ class Judge0InstanceAPIService
     function postSubmission(Submission $submission, array $options = [])
     {
         $endpoint = $this->endpoints['postSubmission'];
-
         return $this->sendRequest($endpoint['method'], $endpoint['uri'] . $submission->getParamsUrl(), [
             'json' => array_merge(
                 $submission->getAllAttributes(),
