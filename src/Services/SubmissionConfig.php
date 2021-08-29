@@ -1,6 +1,6 @@
 <?php
 
-namespace Mouadbnl\Judge0;
+namespace Mouadbnl\Judge0\Services;
 
 use Exception;
 use InvalidArgumentException;

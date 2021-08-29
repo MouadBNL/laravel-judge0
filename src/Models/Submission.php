@@ -5,8 +5,8 @@ namespace Mouadbnl\Judge0\Models;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
-use Mouadbnl\Judge0\SubmissionConfig;
-use Mouadbnl\Judge0\SubmissionParams;
+use Mouadbnl\Judge0\Services\SubmissionConfig;
+use Mouadbnl\Judge0\Services\SubmissionParams;
 
 class Submission extends Model
 {
