@@ -4,6 +4,7 @@ namespace Mouadbnl\Judge0\Models;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 use Mouadbnl\Judge0\SubmissionConfig;
 use Mouadbnl\Judge0\SubmissionParams;
 use Mouadbnl\Judge0\Traits\HasSubmissionConfig;
@@ -39,9 +40,11 @@ class Submission extends Model
         return  json_decode($this->getAttributes()['config'], true);
     }
 
-    public function setConfigAttribute()
+    public function setConfigAttribute($config)
     {
-        throw new Exception("Can not set config directly in the attribute, please use setConfig() on you model");
+        if(! $config instanceof SubmissionConfig)
+            throw new Exception("The config attribute must be an instance of " . SubmissionConfig::class . ".");
+        $this->attributes['config'] = json_encode($config->getConfig());
     }
 
     public function getParamsAttribute()
@@ -52,5 +55,37 @@ class Submission extends Model
     public function setParamsAttribute()
     {
         throw new Exception("Can not set params directly in the attribute, please use setParams() on you model");
+    }
+
+    /**
+     * Allow for both syntaxes
+     * setConfig('abc', 'efg');
+     * setConfig([
+     *  'abc' => 'efg',
+     *  'uvw' => 'xyz'
+     * ]);
+     */
+    public function setConfig($key, $value = null)
+    {
+        $config = SubmissionConfig::init($this->getConfigAttribute());
+        if(is_array($key))
+        {
+            foreach ($key as $k => $v) {
+                $config->set($k, $v);
+            }
+            $this->update([
+                'config' => $config
+            ]);
+            return $this;
+        } 
+        if(! is_string($key)){
+            throw new InvalidArgumentException("key must be a string");
+        } 
+        
+        $config->set($key, $value);
+        $this->update([
+            'config' => $config
+        ]);
+        return $this;
     }
 }

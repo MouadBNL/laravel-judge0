@@ -56,6 +56,22 @@ class SubmissionTest extends TestCase
         $submission->params = '{}';
     }
 
+    /** @test */
+    public function it_can_set_config_via_setConfig()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->setConfig('cpu_time_limit', 1.2);
+
+        $this->assertEquals(1.2, $submission->config['cpu_time_limit']);
+
+        $submission->setConfig([
+            'cpu_time_limit' => 8.4
+        ]);
+        $this->assertEquals(8.4, $submission->config['cpu_time_limit']);
+    }
+
     // /** @test */
     // public function it_contains_submission_config()
     // {
