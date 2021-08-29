@@ -18,6 +18,10 @@ class SubmissionTest extends TestCase
         ]);
 
         $this->assertTrue($submission->exists);
+
+        $submission->setTimeLimit(4);
+        $s = Submission::find($submission->id)->firstOrFail();
+        $this->assertEquals(4, $s->config['cpu_time_limit']);
     }
     /** @test */
     public function is_can_save_submission_to_database()
