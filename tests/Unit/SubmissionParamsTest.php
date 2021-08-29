@@ -3,7 +3,7 @@
 namespace Mouadbnl\Judge0\Tests\Unit;
 
 use InvalidArgumentException;
-use Mouadbnl\Judge0\SubmissionParams;
+use Mouadbnl\Judge0\Services\SubmissionParams;
 use Mouadbnl\Judge0\Tests\TestCase;
 
 class SubmissionParamsTest extends TestCase
