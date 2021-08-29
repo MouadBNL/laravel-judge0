@@ -129,4 +129,20 @@ class SubmissionTest extends TestCase
 
         $this->assertEquals('judge0', $submission->stdin);
     }
+
+    /** @test */
+    public function it_can_submission_without_base64()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->setParams('base64', false);
+        $res = $submission->submit();
+        $this->assertEquals(201, $res['code']);
+        dump($res);
+        sleep(2);
+        $submission->retrieveFromJudge();
+        dump($submission);
+        $this->assertEquals('Accepted', $submission->status->description);    
+    }
 }
