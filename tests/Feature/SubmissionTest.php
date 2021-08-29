@@ -60,6 +60,39 @@ class SubmissionTest extends TestCase
     }
 
     /** @test */
+    public function readme_example_test()
+    {
+        $submission = Submission::create([
+            'language_id' => 54, // C++ (GCC 9.2.0)
+            'source_code' =>'
+            #include<iostream>
+            #include<string>
+            using namespace std;
+
+            int main(){
+                string s;
+                cin >> s;
+                cout << "the value you entered is : " << s;
+                return 0;
+            }
+            '
+            ])
+            ->setInput('judge0')
+            ->setExpectedOutput('the value you entered is : judge0')
+            ->setTimeLimit(1) // seconds
+            ->setMemoryLimitInMegabytes(256);
+        $res = $submission->submit();
+        dump($res);
+        sleep(2);
+
+        $res = $submission->retrieveFromJudge();
+        
+        dump($res);
+
+        $this->assertEquals('Accepted', $submission->status->description);
+    }
+
+    /** @test */
     public function it_can_not_set_config_directly()
     {
         $this->expectException(Exception::class);
