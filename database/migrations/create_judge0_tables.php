@@ -17,6 +17,7 @@ class CreateJudge0Tables extends Migration
         Schema::create($tables['submissions'], function (Blueprint $table) {
             $table->id();
             $table->string("token")->nullable();
+            $table->json("status")->nullable();
 
             // $table->morphs('submitter');
             $table->integer("language_id");

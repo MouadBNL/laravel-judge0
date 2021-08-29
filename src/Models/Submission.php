@@ -3,6 +3,7 @@
 namespace Mouadbnl\Judge0\Models;
 
 use Exception;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 use Mouadbnl\Judge0\Facades\Judge0;
@@ -13,7 +14,11 @@ class Submission extends Model
 {
     protected $attributes = [
         'config' => null,
-        'params' => null
+        'params' => null,
+    ];
+
+    protected $casts = [
+        'status' => AsArrayObject::class
     ];
     
     protected $guarded = ['id'];
@@ -23,6 +28,7 @@ class Submission extends Model
     {
         $this->attributes['config'] = json_encode(SubmissionConfig::init()->getConfig());
         $this->attributes['params'] = json_encode(SubmissionParams::init()->getParams());
+        $this->status = ['id' => 0, 'description' => 'Waiting'];
 
         parent::__construct($attributes);
     }
@@ -36,19 +42,34 @@ class Submission extends Model
     {
         $res = Judge0::postSubmission($this);
         if(isset($res['content']['token'])){
-            $this->update(['token' => $res['content']['token']]);
+            $this->update([
+                'token' => $res['content']['token'],
+            ]);
         }
         return $res;
     }
 
     public static function retrieve(string $token)
     {
-        return Judge0::getSubmission($token);
+        $res = Judge0::getSubmission($token);
+        $submission = self::where('token', '=', $token)->firstOrFail();
+        if(isset($res['content']['status'])){
+            $submission->update([
+                'status' => json_encode($res['content']['status'], true)
+            ]);
+        }
+        return $res;
     }
 
     public function retrieveFromJudge()
     {
-        return self::retrieve($this->token);
+        $res = Judge0::getSubmission($this->token);
+        if(isset($res['content']['status'])){
+            $this->update([
+                'status' => json_encode($res['content']['status'], true)
+            ]);
+        }
+        return $res;
     }
 
     public function setTimeLimit(float $seconds)
@@ -226,4 +247,20 @@ class Submission extends Model
     {
         return SubmissionParams::init($this->getParamsAttribute())->getUrl();
     }
+    /*
+    |--------------------------------------------------------------------------
+    | 
+    |--------------------------------------------------------------------------
+    */
+
+    // public function setStatusAttribute($status)
+    // {
+    //     $this->attributes['status'] = json_encode($status);
+    // }
+
+    // public function getStatusAttribute()
+    // {
+    //     // dump($this->status);
+    //     return json_decode($this->attributes['status']);
+    // }
 }
