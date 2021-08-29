@@ -18,6 +18,14 @@ class Submission extends Model
     
     protected $guarded = ['id'];
 
+    protected $requestBase64Attributes = [
+        'source_code', 'stdin', 'expected_output'
+    ];
+
+    protected $responseBase64Attributes = [
+        'stdout', 'stderr'
+    ];
+
 
     public function __construct(array $attributes = [])
     {
@@ -231,11 +239,21 @@ class Submission extends Model
 
     public function getAllAttributes()
     {
-        return array_merge(
+        $attrs = array_merge(
             $this->attributes,
             $this->getConfigAttribute(),
             $this->getParamsAttribute()
         );
+
+        if($this->params['base64']){
+            foreach ($this->requestBase64Attributes as $attr) {
+                if(isset($attrs[$attr])){
+                    $attrs[$attr] = base64_encode($attrs[$attr]);
+                }
+            }
+        }
+
+        return $attrs;
     }
 
     public function getParamsUrl()
