@@ -139,10 +139,8 @@ class SubmissionTest extends TestCase
         ])->setParams('base64', false);
         $res = $submission->submit();
         $this->assertEquals(201, $res['code']);
-        dump($res);
         sleep(2);
         $submission->retrieveFromJudge();
-        dump($submission);
         $this->assertEquals('Accepted', $submission->status->description);    
     }
 }
