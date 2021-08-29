@@ -7,13 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 use Mouadbnl\Judge0\SubmissionConfig;
 use Mouadbnl\Judge0\SubmissionParams;
-use Mouadbnl\Judge0\Traits\HasSubmissionConfig;
-use Mouadbnl\Judge0\Traits\HasSubmissionParams;
 
 class Submission extends Model
 {
-    use HasSubmissionConfig;
-    use HasSubmissionParams;
     protected $attributes = [
         'config' => null,
         'params' => null
