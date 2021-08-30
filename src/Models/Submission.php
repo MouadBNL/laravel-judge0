@@ -43,6 +43,12 @@ class Submission extends Model
 
     public function submit()
     {
+        if($this->judged){
+            if(config('judge0.throw_error_on_resubmit')){
+                throw new Exception("This submission has already been judged, and con not be rejudged");
+            }
+            return $this;
+        }
         $res = Judge0::postSubmission($this);
         if(isset($res['content']['token'])){
             $this->update([
@@ -74,7 +80,8 @@ class Submission extends Model
         $res = Judge0::getSubmission($this->token);
         if(isset($res['content']['status'])){
             $this->update([
-                'status' => $res['content']['status']
+                'status' => $res['content']['status'],
+                'judged' => true
             ]);
         }
         return $res;

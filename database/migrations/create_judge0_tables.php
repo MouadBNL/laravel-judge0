@@ -34,6 +34,8 @@ class CreateJudge0Tables extends Migration
             $table->json("config")->nullable();
             $table->json("params")->nullable();
 
+            $table->boolean('judged')->default(0);
+
             $table->timestamps();
         });
     }

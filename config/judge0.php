@@ -5,6 +5,8 @@ use Mouadbnl\Judge0\Services\Judge0RapidapiService;
 
 return [
 
+    'throw_error_on_resubmit' => true,
+
     'default' => 'instance',
 
     'drivers' => [

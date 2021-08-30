@@ -88,4 +88,24 @@ class SubmissionTest extends TestCase
         
         $this->assertEquals('Accepted', $submission->status->description);
     }
+
+    /** @test */
+    public function it_throws_exception_on_resubmit()
+    {
+        $this->expectException(Exception::class);
+        config()->set('judge0.throw_error_on_resubmit', true);
+
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ]);
+        $submission->submit();
+
+        sleep(2);
+
+        $submission->retrieveFromJudge();
+
+        $submission->submit();
+
+    }
 }
