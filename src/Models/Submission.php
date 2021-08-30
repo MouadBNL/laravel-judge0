@@ -43,12 +43,6 @@ class Submission extends Model
 
     public function submit()
     {
-        if($this->judged){
-            if(config('judge0.throw_error_on_resubmit')){
-                throw new Exception("This submission has already been judged, and con not be rejudged");
-            }
-            return $this;
-        }
         $res = Judge0::postSubmission($this);
         if(isset($res['content']['token'])){
             $this->update([
@@ -302,5 +296,27 @@ class Submission extends Model
     {
         // dump($this->status);
         return json_decode($this->attributes['status']);
+    }
+
+
+
+    /**
+     * ! this overides the default Model function
+     * Update the model in the database.
+     *
+     * @param  array  $attributes
+     * @param  array  $options
+     * @return bool
+     */
+    public function update(array $attributes = [], array $options = [])
+    {
+        if($this->judged && config('judge0.throw_error_on_resubmit')){
+            throw new Exception("This submission has already been judged, and con not be rejudged");
+        }
+        if (! $this->exists) {
+            return false;
+        }
+
+        return $this->fill($attributes)->save($options);
     }
 }
