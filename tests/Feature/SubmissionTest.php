@@ -90,7 +90,7 @@ class SubmissionTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_exception_on_resubmit()
+    public function it_throws_exception_on_resubmit_if_throw_error_on_resubmit_is_true()
     {
         $this->expectException(Exception::class);
         config()->set('judge0.throw_error_on_resubmit', true);
@@ -107,5 +107,68 @@ class SubmissionTest extends TestCase
 
         $submission->submit();
 
+    }
+
+    /** @test */
+    public function it_does_not_throws_exception_on_resubmit_if_throw_error_on_resubmit_is_false()
+    {
+        config()->set('judge0.throw_error_on_resubmit', false);
+
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ]);
+        $submission->submit();
+
+        sleep(2);
+
+        $submission->retrieveFromJudge();
+
+        $submission->submit();
+
+        $this->assertTrue($submission->exists);
+    }
+
+    /** @test */
+    public function it_does_set_the_time_memory_stdout_stderr_in_submission()
+    {
+        $sub1 = Submission::create([
+            'language_id' => 54, // C++ (GCC 9.2.0)
+            'source_code' =>'
+            #include<iostream>
+            #include<string>
+            using namespace std;
+
+            int main(){
+                cout << "hello \t  \n world\n";
+                return 0;
+            }
+            '
+            ])
+            ->setTimeLimit(1) // seconds
+            ->setMemoryLimitInMegabytes(256);
+        $sub2 = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello \t \n world')" // to get an stderr
+        ]);
+        $sub1->submit();
+        $sub2->submit();
+
+        sleep(2);
+
+        $sub1->retrieveFromJudge();
+        $sub2->retrieveFromJudge();
+
+        $this->assertNotNull($sub1->stdout);
+        $this->assertEquals(
+            'hello world', 
+            trim(preg_replace(
+                '!\s+!', 
+                ' ', 
+                $sub1->stdout))
+        );
+        $this->assertNotNull($sub1->time);
+        $this->assertNotNull($sub1->memory);
+        $this->assertNotNull($sub2->stderr);
     }
 }

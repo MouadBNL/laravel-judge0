@@ -78,10 +78,16 @@ class Submission extends Model
     public function retrieveFromJudge()
     {
         $res = Judge0::getSubmission($this->token);
-        if(isset($res['content']['status'])){
+        $content = $res['content'];
+        if(isset($content['status'])){
             $this->update([
-                'status' => $res['content']['status'],
-                'judged' => true
+                'status' => $content['status'],
+                'stdout' => $content['stdout'],
+                'stderr' => $content['stderr'],
+                'time' => $content['time'],
+                'memory' => $content['memory'],
+                'compile_output' => $content['compile_output'],
+                'judged' => true,
             ]);
         }
         return $res;
