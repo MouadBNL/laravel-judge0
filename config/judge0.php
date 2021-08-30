@@ -6,6 +6,7 @@ use Mouadbnl\Judge0\Services\Judge0RapidapiService;
 return [
 
     'throw_error_on_resubmit' => true,
+    'lock_submisson_after_judging' => true,
 
     'default' => 'instance',
 

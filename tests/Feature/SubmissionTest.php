@@ -130,45 +130,45 @@ class SubmissionTest extends TestCase
     }
 
     /** @test */
-    public function it_does_set_the_time_memory_stdout_stderr_in_submission()
+    public function it_does_lock_submission_if_lock_submisson_after_judging_is_true()
     {
-        $sub1 = Submission::create([
-            'language_id' => 54, // C++ (GCC 9.2.0)
-            'source_code' =>'
-            #include<iostream>
-            #include<string>
-            using namespace std;
+        $this->expectException(Exception::class);
+        config()->set('judge0.lock_submisson_after_judging', true);
 
-            int main(){
-                cout << "hello \t  \n world\n";
-                return 0;
-            }
-            '
-            ])
-            ->setTimeLimit(1) // seconds
-            ->setMemoryLimitInMegabytes(256);
-        $sub2 = Submission::create([
+        $submission = Submission::create([
             'language_id' => 71,
-            'source_code' => "print('hello \t \n world')" // to get an stderr
+            'source_code' => "print('hello world')"
         ]);
-        $sub1->submit();
-        $sub2->submit();
+        $submission->submit();
 
         sleep(2);
 
-        $sub1->retrieveFromJudge();
-        $sub2->retrieveFromJudge();
+        $submission->retrieveFromJudge();
 
-        $this->assertNotNull($sub1->stdout);
-        $this->assertEquals(
-            'hello world', 
-            trim(preg_replace(
-                '!\s+!', 
-                ' ', 
-                $sub1->stdout))
-        );
-        $this->assertNotNull($sub1->time);
-        $this->assertNotNull($sub1->memory);
-        $this->assertNotNull($sub2->stderr);
+        $submission->update([
+            'source_code' => "print('hello world 2')"
+        ]);
+    }
+
+    /** @test */
+    public function it_does_not_lock_submission_if_lock_submisson_after_judging_is_false()
+    {
+        config()->set('judge0.lock_submisson_after_judging', false);
+
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ]);
+        $submission->submit();
+
+        sleep(2);
+
+        $submission->retrieveFromJudge();
+
+        $submission->update([
+            'source_code' => "print('hello world 2')"
+        ]);
+
+        $this->assertEquals("print('hello world 2')", $submission->source_code);
     }
 }

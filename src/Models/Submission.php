@@ -43,6 +43,12 @@ class Submission extends Model
 
     public function submit()
     {
+        if($this->judged){
+            if(config('judge0.throw_error_on_resubmit')){
+                throw new Exception("This submission has already been judged, and can not be rejudged");
+            }
+            return $this;
+        }
         $res = Judge0::postSubmission($this);
         if(isset($res['content']['token'])){
             $this->update([
@@ -310,13 +316,9 @@ class Submission extends Model
      */
     public function update(array $attributes = [], array $options = [])
     {
-        if($this->judged && config('judge0.throw_error_on_resubmit')){
-            throw new Exception("This submission has already been judged, and con not be rejudged");
+        if($this->judged && config('judge0.lock_submisson_after_judging')){
+            throw new Exception("This submission has already been judged and cannot be updated");
         }
-        if (! $this->exists) {
-            return false;
-        }
-
-        return $this->fill($attributes)->save($options);
+        parent::update($attributes, $options);
     }
 }
