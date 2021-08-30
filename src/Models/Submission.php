@@ -29,8 +29,8 @@ class Submission extends Model
 
     public function __construct(array $attributes = [])
     {
-        $this->attributes['config'] = json_encode(SubmissionConfig::init()->getConfig());
-        $this->attributes['params'] = json_encode(SubmissionParams::init()->getParams());
+        $this->config = SubmissionConfig::init();
+        $this->params = SubmissionParams::init();
         $this->status = (object)['id' => 0, 'description' => 'Waiting'];
 
         parent::__construct($attributes);

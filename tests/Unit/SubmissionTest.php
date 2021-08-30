@@ -9,6 +9,18 @@ use Mouadbnl\Judge0\Tests\TestCase;
 class SubmissionTest extends TestCase
 {
     /** @test */
+    public function it_can_save_config_and_params_in_database()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->setTimeLimit(1.2);
+
+        $newSub = Submission::findOrFail($submission->id);
+        $this->assertEquals(1.2, $newSub->config['cpu_time_limit']);
+    }
+
+    /** @test */
     public function it_can_not_set_config_directly()
     {
         $this->expectException(Exception::class);
