@@ -150,9 +150,6 @@ class SubmissionTest extends TestCase
             'source_code' => "print('hello world')"
         ])->setParams('base64', false);
         $res = $submission->submit();
-        $this->assertEquals(201, $res['code']);
-        sleep(2);
-        $submission->retrieveFromJudge();
         $this->assertEquals('Accepted', $submission->status->description);    
     }
 
@@ -185,18 +182,14 @@ class SubmissionTest extends TestCase
             '
             ])
             ->setTimeLimit(1) // seconds
-            ->setMemoryLimitInMegabytes(256);
+            ->setMemoryLimitInMegabytes(256)
+            ->submit();
+            
         $sub2 = Submission::create([
             'language_id' => 71,
             'source_code' => "print('hello \t \n world')" // to get an stderr
-        ]);
-        $sub1->submit();
-        $sub2->submit();
+        ])->submit();
 
-        sleep(2);
-
-        $sub1->retrieveFromJudge();
-        $sub2->retrieveFromJudge();
 
         $this->assertNotNull($sub1->stdout);
         $this->assertEquals(

@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Mouadbnl\Judge0\Facades\Judge0;
 use Mouadbnl\Judge0\Services\SubmissionConfig;
 use Mouadbnl\Judge0\Services\SubmissionParams;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class Submission extends Model
 {
@@ -43,12 +44,8 @@ class Submission extends Model
 
     public function submit()
     {
-        if($this->judged){
-            if(config('judge0.throw_error_on_resubmit')){
-                throw new Exception("This submission has already been judged, and can not be rejudged");
-            }
-            return $this;
-        }
+        if(! $this->canBeRejudged()) return $this;
+
         $res = Judge0::postSubmission($this);
         if(isset($res['content']['token'])){
             $this->update([
@@ -60,7 +57,20 @@ class Submission extends Model
                 'status' => $res['content']['status']
             ]);
         }
-        return $res;
+        $res = Judge0::getSubmission($this->token);
+        $content = $res['content'];
+        if(isset($content['status'])){
+            $this->update([
+                'status' => $content['status'],
+                'stdout' => $content['stdout'],
+                'stderr' => $content['stderr'],
+                'time' => $content['time'],
+                'memory' => $content['memory'],
+                'compile_output' => $content['compile_output'],
+                'judged' => true,
+            ]);
+        }
+        return $this;
     }
 
     public static function retrieve(string $token)
@@ -320,5 +330,17 @@ class Submission extends Model
             throw new Exception("This submission has already been judged and cannot be updated");
         }
         parent::update($attributes, $options);
+    }
+
+    protected function canBeRejudged(): bool
+    {
+        if($this->judged && !config('judge0.resubmit_judged_submission'))
+        {
+            if(config('judge0.throw_error_on_resubmit')){
+                throw new Exception("This submission has already been judged, and can not be rejudged");
+            }
+            return false;
+        }
+        return true;
     }
 }
