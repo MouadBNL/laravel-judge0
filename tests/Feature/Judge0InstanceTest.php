@@ -28,6 +28,8 @@ class Judge0InstanceTest extends TestCase
         $this->assertEquals(201, $res['code']);
     }
 
+    /* ------------------------------------------------------------------------------ */
+
     /** @test */
     public function get_languages()
     {
@@ -51,5 +53,15 @@ class Judge0InstanceTest extends TestCase
 
         $this->assertEquals(200, $res['code']);
         $this->assertEquals(71, $res['content']['id']);
+    }
+
+    /* ------------------------------------------------------------------------------ */
+
+    /** @test */
+    public function get_statuses()
+    {
+        $res = Judge0::getStatuses();
+
+        $this->assertEquals(200, $res['code']);
     }
 }

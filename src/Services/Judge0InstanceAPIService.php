@@ -55,6 +55,11 @@ class Judge0InstanceAPIService
         return $this->sendRequest($endpoint['method'], $uri);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | languages endpoints
+    |--------------------------------------------------------------------------
+    */
     /**
      * Getting allowed languages from Judge0 API
      */
@@ -83,6 +88,24 @@ class Judge0InstanceAPIService
         $uri = str_replace("{id}", $id, $endpoint['uri']);
         return $this->sendRequest($endpoint['method'], $uri);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | judge0 Statuses
+    |--------------------------------------------------------------------------
+    */
+
+    public function getStatuses()
+    {
+        $endpoint = $this->endpoints['getStatuses'];
+        return $this->sendRequest($endpoint['method'], $endpoint['uri']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | internal functions
+    |--------------------------------------------------------------------------
+    */
 
     protected function formatResponse(Response $res)
     {
