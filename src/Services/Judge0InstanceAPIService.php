@@ -56,12 +56,32 @@ class Judge0InstanceAPIService
     }
 
     /**
-     * 
+     * Getting allowed languages from Judge0 API
      */
     public function getLanguages()
     {
         $endpoint = $this->endpoints['getLanguages'];
         return $this->sendRequest($endpoint['method'], $endpoint['uri']);
+    }
+
+    /**
+     * Getting all language available in Judge0
+     */
+    public function getAllLanguages()
+    {
+        $endpoint = $this->endpoints['getAllLanguages'];
+        return $this->sendRequest($endpoint['method'], $endpoint['uri']);
+    }
+
+    /**
+     * Getting a language from judge API
+     * @param id language id
+     */
+    public function getLanguage(int $id)
+    {
+        $endpoint = $this->endpoints['getLanguage'];
+        $uri = str_replace("{id}", $id, $endpoint['uri']);
+        return $this->sendRequest($endpoint['method'], $uri);
     }
 
     protected function formatResponse(Response $res)

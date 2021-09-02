@@ -35,4 +35,21 @@ class Judge0InstanceTest extends TestCase
         
         $this->assertEquals(200, $res['code']);
     }
+
+    /** @test */
+    public function get_all_languages()
+    {
+        $res = Judge0::getAllLanguages();
+        
+        $this->assertEquals(200, $res['code']);
+    }
+
+    /** @test */
+    public function get_language()
+    {
+        $res = Judge0::getLanguage(71);
+
+        $this->assertEquals(200, $res['code']);
+        $this->assertEquals(71, $res['content']['id']);
+    }
 }
