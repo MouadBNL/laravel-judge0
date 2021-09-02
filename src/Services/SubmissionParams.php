@@ -6,28 +6,45 @@ use InvalidArgumentException;
 
 class SubmissionParams
 {
-    protected array $paramsItems = [
+    /**
+     * @property array $paramKeys the keys availabe to get|change
+     */
+    protected array $paramsKeys = [
         'base64' => ['bool'],
         'wait' => ['bool'],
         'feilds' => ['string']
     ];
 
+    /**
+     * @property array $params the params keys and values
+     */
     protected array $params;
 
+    /**
+     * @param array $params overriding the default params
+     */
     public function __construct(array $params = [])
     {
         // TODO add validation here
-        foreach ($this->paramsItems as $key => $types) {
+        foreach ($this->paramsKeys as $key => $types) {
             $this->params[$key] = $params[$key] ?? config('judge0.submission_params.' . $key);
         }
     }
     
-    // Adding a static constructor
-    public static function init(array $config = []): self
+    /**
+     * @param array $params  overriding the default params
+     */
+    public static function init(array $params = []): self
     {
-        return new self($config);
+        return new self($params);
     }
 
+    /**
+     * Changing something in the default params
+     * @param string $key key of the params to set
+     * @param string $value the value of the new params
+     * @return self
+     */
     public function set(string $key, string $value)
     {
         if(! isset($this->params[$key])){
@@ -38,11 +55,22 @@ class SubmissionParams
         return $this;
     }
 
+    /**
+     * @param string $key if null will return the whole params,
+     *              else return the value of the key in the params
+     * @return array $params if the key is null
+     * @return string $value of the params key 
+     */
     public function getParams(?string $key = null)
     {
         return $key ? $this->params[$key] : $this->params;
     }
 
+    /**
+     * Get the formated get url
+     * ?base64_encode=true&wait=true&fields=*
+     * @return string $getparamsUrl
+     */
     public function getUrl()
     {
         $params = [

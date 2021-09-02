@@ -2,14 +2,10 @@
 
 namespace Mouadbnl\Judge0\Services;
 
-use Closure;
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Mouadbnl\Judge0\Models\Submission;
-use Mouadbnl\Judge0\SubmissionConfig;
-use Mouadbnl\Judge0\SubmissionParams;
 
 class Judge0InstanceAPIService
 {
@@ -26,6 +22,12 @@ class Judge0InstanceAPIService
         $this->endpoints = config('judge0.config.endpoints');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | judge0 Authentication
+    |--------------------------------------------------------------------------
+    */
+
     function authenticate()
     {
         $endpoint = $this->endpoints['authenticate'];
@@ -37,6 +39,17 @@ class Judge0InstanceAPIService
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | judge0 Submissions
+    |--------------------------------------------------------------------------
+    | Managing everuthing related so submissions
+    */
+
+    /**
+     * @param Submission $submission the submission to send to the Judge0
+     * @param array $options Additional options to send with the request
+     */
     function postSubmission(Submission $submission, array $options = [])
     {
         $endpoint = $this->endpoints['postSubmission'];
@@ -48,6 +61,9 @@ class Judge0InstanceAPIService
         ]);
     }
 
+    /**
+     * @param string $token The token of the submmsion to retrieve
+     */
     public function getSubmission(string $token)
     {
         $endpoint = $this->endpoints['getSubmission'];
@@ -60,6 +76,7 @@ class Judge0InstanceAPIService
     | languages endpoints
     |--------------------------------------------------------------------------
     */
+
     /**
      * Getting allowed languages from Judge0 API
      */
@@ -130,7 +147,11 @@ class Judge0InstanceAPIService
     | internal functions
     |--------------------------------------------------------------------------
     */
-
+    
+    /**
+     * Formating the response returned by the Guzzle Client
+     * @param Response $res the response returned by the Gizzle client
+     */
     protected function formatResponse(Response $res)
     {
         return [
@@ -139,6 +160,14 @@ class Judge0InstanceAPIService
         ];
     }
 
+    /**
+     * In Case judge0 counld not process the request, it will return a response 
+     * with an Http error code, and it is cached bu Guzzle client and it 
+     * throw is as an exception, here for format the exception to 
+     * return an appropriate response
+     * @param ClientException $e
+     * @return Array $response with the Http error code and the exception message
+     */
     protected function formatClientException(ClientException $e){
         return [
             'code' => $e->getCode(),
@@ -146,6 +175,20 @@ class Judge0InstanceAPIService
         ];
     }
 
+    /**
+     * Easily send a request to a uri with the guzzle client and get a formated response
+     * @param string $method GET | POST | PUT | PATCH | DELETE
+     * @param string $uri The endpoint to which the request will be sent on top
+     *               of the the base_uri of the Guzzle client
+     * @param array $options Otions like the body and headers .. that will be send 
+     *              with the request (https://docs.guzzlephp.org/en/stable/request-options.html)
+     * @return array $res if the request was a success this willr eturn an array with
+     *               the response code and its content
+     * @return array $res if the request was unsuccessful, it will return and array with
+     *               the response error code and message
+     * @return ClientException if the request was unsuccessful and config allows it to
+     *                          throw the error
+     */
     protected function sendRequest(string $method, string $uri, array $options = [])
     {
         try {
@@ -154,6 +197,7 @@ class Judge0InstanceAPIService
             );
         } catch (ClientException $e) {
             throw $e;
+            // TODO thow or return a response based on the judge0 config
             // return $this->formatClientException($e);
         }
     }

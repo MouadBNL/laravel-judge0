@@ -19,11 +19,19 @@ class Submission extends Model
     
     protected $guarded = ['id'];
 
-    protected $requestBase64Attributes = [
+    /**
+     * @property array $requestBase64Attributes
+     * list of the attribute that needs to be encoded to base64 before sending the request
+     */
+    protected array $requestBase64Attributes = [
         'source_code', 'stdin', 'expected_output'
     ];
 
-    protected $responseBase64Attributes = [
+    /**
+     * @property array $responseBase64Attributes
+     * list of attributes that needs to be decoded from base64 after reciving the response
+     */
+    protected array $responseBase64Attributes = [
         'stdout', 'stderr', 'compile_output'
     ];
 
@@ -76,54 +84,82 @@ class Submission extends Model
         return $this;
     }
 
+    /**
+     * @param float $seconds the number of seconds before declaring the TLE status
+     */
     public function setTimeLimit(float $seconds)
     {
         $this->setConfig('cpu_time_limit', $seconds);
         return $this;
     }
 
+    /**
+     * @param float $milliseconds setting the time limit in milliseconds
+     */
     public function setTimeLimitInMilliseconds(float $milliseconds)
     {
         $this->setConfig('cpu_time_limit', $milliseconds * 0.001);
         return $this;
     }
 
+    /**
+     * Setting the defaul time limit from the config file
+     */
     public function setDefaultTimeLimit()
     {
         $this->setTimeLimit(config('judge0.submission_config.cpu_time_limit'));
         return $this;
     }
 
+    /**
+     * @param float $kiobytes The memory limit in kilobytes before declaring MLE status
+     */
     public function setMemoryLimit(float $kilobyte)
     {
         $this->setConfig('memory_limit', $kilobyte);
         return $this;
     }
 
+    /**
+     * @param float $megabytes setting the memory limit in megabytes
+     */
     public function setMemoryLimitInMegabytes(float $megabytes)
     {
         $this->setConfig('memory_limit', $megabytes * 1024);
         return $this;
     }
 
+    /**
+     * Setting the defaul memory limit from the config file
+     */
     public function setDefaultMemoryLimit()
     {
         $this->setMemoryLimit(config('judge0.submission_config.memory_limit'));
         return $this;
     }
 
+    /**
+     * @param string $input the input to provide to the source code
+     */
     public function setStdin(?string $input)
     {
         $this->update(['stdin' => $input]);
         return $this;
     }
 
+    /**
+     * @param string $input the input to provide to the source code
+     */
     public function setInput(?string $input)
     {
         $this->setStdin($input);
         return $this;
     }
 
+    /**
+     * @param string $output the expected output of the judge
+     * this will define whether the output is wrong or not
+     */
     public function setExpectedOutput(?string $output)
     {
         $this->update(['expected_output' => $output]);
@@ -141,18 +177,30 @@ class Submission extends Model
     |
     */
 
-    public function getConfig(string $key)
+    /**
+     * @param string $key The config key to get
+     * @return string $value the value of config
+     */
+    public function getConfig(string $key): string
     {
         return $this->config->getConfig($key);
     }
 
-    public function getConfigAttribute()
+    /**
+     * Get an instance og SubmissionConfig class initiated from the submission's config
+     * @return SubmissionConfig $config
+     */
+    public function getConfigAttribute(): SubmissionConfig
     {
         return SubmissionConfig::init(
             json_decode($this->getAttributes()['config'], true)
         );
     }
 
+    /**
+     * Setting the Config on the submission
+     * @param SubmissionConfig $config
+     */
     public function setConfigAttribute($config)
     {
         if(! $config instanceof SubmissionConfig){
@@ -162,16 +210,28 @@ class Submission extends Model
         $this->attributes['config'] = json_encode($config->getConfig());
     }
 
+    /**
+     * @param string $key The params key to get
+     * @return string $value the value of params
+     */
     public function getParams(string $key)
     {
         return $this->params->getParams($key);
     }
 
+    /**
+     * Get an instance og SubmissionParams class initiated from the submission's params
+     * @return SubmissionParams $params
+     */
     public function getParamsAttribute()
     {
         return  SubmissionParams::init(json_decode($this->getAttributes()['params'], true));
     }
 
+    /**
+     * Setting the Params on the submission
+     * @param SubmissionParams $params
+     */
     public function setParamsAttribute($params)
     {
         if(! $params instanceof SubmissionParams){
@@ -182,14 +242,11 @@ class Submission extends Model
     }
 
     /**
-     * Allow for both syntaxes
-     * setConfig('abc', 'efg');
-     * setConfig([
-     *  'abc' => 'efg',
-     *  'uvw' => 'xyz'
-     * ]);
+     * Setting one or mutiple config values
+     * @param string|array $key array of config to override, ot the single key to override
+     * @param string $value the value to set for the provided key
      */
-    public function setConfig($key, $value = null)
+    public function setConfig($key, string $value = null)
     {
         $config = $this->getConfigAttribute();
         if(is_array($key))
@@ -214,12 +271,9 @@ class Submission extends Model
     }
 
     /**
-     * Allow for both syntaxes
-     * setParams('abc', 'efg');
-     * setParams([
-     *  'abc' => 'efg',
-     *  'uvw' => 'xyz'
-     * ]);
+     * Setting one or mutiple params values
+     * @param string|array $key array of params to override, ot the single key to override
+     * @param string $value the value to set for the provided key
      */
     public function setParams($key, $value = null)
     {
@@ -250,6 +304,11 @@ class Submission extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Get all model attribute as an array including the config and params 
+     * merged with the attributes
+     * @return array $attributes
+     */
     public function getAllAttributes()
     {
         $attrs = array_merge(
@@ -269,6 +328,9 @@ class Submission extends Model
         return $attrs;
     }
 
+    /**
+     * get The SubmissionParams fromated get url params
+     */
     public function getParamsUrl()
     {
         return $this->params->getUrl();
@@ -338,6 +400,11 @@ class Submission extends Model
         parent::update($attributes, $options);
     }
 
+    /**
+     * Find the the submission could be judged based on whether 
+     * it was already judged and if the judge0 config allows it
+     * @return bool $judgeable
+     */
     protected function canBeRejudged(): bool
     {
         if($this->judged && !config('judge0.resubmit_judged_submission'))

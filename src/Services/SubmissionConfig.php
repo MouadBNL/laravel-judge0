@@ -40,13 +40,23 @@ class SubmissionConfig
         }
     }
     
-    // Adding a static constructor
+    /**
+     * Static constructor
+     * @param array $config the config keys to override the defaults
+     * @return self
+     */
     public static function init(array $config = []): self
     {
         return new self($config);
     }
 
-    public function set(string $key, string $value)
+    /**
+     * Changing something in the default config
+     * @param string $key key of the config to set
+     * @param string $value the value of the new config
+     * @return self
+     */
+    public function set(string $key, string $value): self
     {
         // TODO add validation here for the the provided key
         if(! array_key_exists($key, $this->config)){
@@ -57,16 +67,26 @@ class SubmissionConfig
         return $this;
     }
 
+    /**
+     * @param string $key if null will return the whole config,
+     *              else return the value of the key in the config
+     * @return array $config if the key is null
+     * @return string $value of the config key 
+     */
     public function getConfig(string $key = null)
     {
         return $key ? $this->config[$key] : $this->config;
     }
 
+    /**
+     * override the config keys provided 
+     * @param array $arr the config array to eb merged
+     */
     public function mergeWith(array $arr)
     {
         foreach ($this->config as $key => $value) {
             $arr[$key] = $value;
         }
-        return $arr;
+        return $this;
     }
 }
