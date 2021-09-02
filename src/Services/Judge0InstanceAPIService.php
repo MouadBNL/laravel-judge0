@@ -103,6 +103,18 @@ class Judge0InstanceAPIService
 
     /*
     |--------------------------------------------------------------------------
+    | judge0 Statistics
+    |--------------------------------------------------------------------------
+    */
+
+    public function getStatistics()
+    {
+        $endpoint = $this->endpoints['getStatistics'];
+        return $this->sendRequest($endpoint['method'], $endpoint['uri']);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | internal functions
     |--------------------------------------------------------------------------
     */

@@ -64,4 +64,14 @@ class Judge0InstanceTest extends TestCase
 
         $this->assertEquals(200, $res['code']);
     }
+
+    /* ------------------------------------------------------------------------------ */
+
+    /** @test */
+    public function get_statistics()
+    {
+        $res = Judge0::getStatistics();
+
+        $this->assertEquals(200, $res['code']);
+    }
 }
