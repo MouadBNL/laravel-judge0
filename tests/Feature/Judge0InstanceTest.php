@@ -27,4 +27,12 @@ class Judge0InstanceTest extends TestCase
         $this->assertArrayHasKey('code', $res);
         $this->assertEquals(201, $res['code']);
     }
+
+    /** @test */
+    public function get_languages()
+    {
+        $res = Judge0::getLanguages();
+        
+        $this->assertEquals(200, $res['code']);
+    }
 }

@@ -55,6 +55,15 @@ class Judge0InstanceAPIService
         return $this->sendRequest($endpoint['method'], $uri);
     }
 
+    /**
+     * 
+     */
+    public function getLanguages()
+    {
+        $endpoint = $this->endpoints['getLanguages'];
+        return $this->sendRequest($endpoint['method'], $endpoint['uri']);
+    }
+
     protected function formatResponse(Response $res)
     {
         return [
