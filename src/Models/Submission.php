@@ -62,10 +62,7 @@ class Submission extends Model
         
         if($this->getParams('base64'))
         {
-            foreach ($this->responseBase64Attributes as $attr)
-            {
-                $res['content'][$attr] = base64_decode($res['content'][$attr]);
-            }
+            $res['content'] = $this->formatFromBase64($this->responseBase64Attributes, $res['content']);
         }
         
         $content = $res['content'];
@@ -318,11 +315,7 @@ class Submission extends Model
         );
 
         if($this->getParams('base64')){
-            foreach ($this->requestBase64Attributes as $attr) {
-                if(isset($attrs[$attr])){
-                    $attrs[$attr] = base64_encode($attrs[$attr]);
-                }
-            }
+            $attrs = $this->formatToBase64($this->requestBase64Attributes, $attrs);
         }
 
         return $attrs;
@@ -415,5 +408,35 @@ class Submission extends Model
             return false;
         }
         return true;
+    }
+
+    /**
+     * formating  keys to base base64
+     * @param array $keys the key to format
+     * @param array $attributes to be formated
+     */
+    protected function formatToBase64(array $keys, array $attributes): array
+    {
+        foreach ($keys as $key) {
+            if(isset($attributes[$key])){
+                $attributes[$key] = base64_encode($attributes[$key]);
+            }
+        }
+        return $attributes;
+    }
+
+    /**
+     * formating  keys to base base64
+     * @param array $keys the key to format
+     * @param array $attributes to be formated
+     */
+    protected function formatFromBase64(array $keys, array $attributes): array
+    {
+        foreach ($keys as $key) {
+            if(isset($attributes[$key])){
+                $attributes[$key] = base64_decode($attributes[$key]);
+            }
+        }
+        return $attributes;
     }
 }
