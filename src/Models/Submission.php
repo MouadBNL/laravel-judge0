@@ -138,9 +138,16 @@ class Submission extends Model
     |
     */
 
+    public function getConfig(string $key)
+    {
+        return $this->config->getConfig($key);
+    }
+
     public function getConfigAttribute()
     {
-        return  json_decode($this->getAttributes()['config'], true);
+        return SubmissionConfig::init(
+            json_decode($this->getAttributes()['config'], true)
+        );
     }
 
     public function setConfigAttribute($config)
@@ -176,7 +183,7 @@ class Submission extends Model
      */
     public function setConfig($key, $value = null)
     {
-        $config = SubmissionConfig::init($this->getConfigAttribute());
+        $config = $this->getConfigAttribute();
         if(is_array($key))
         {
             foreach ($key as $k => $v) {
@@ -239,7 +246,7 @@ class Submission extends Model
     {
         $attrs = array_merge(
             $this->attributes,
-            $this->getConfigAttribute(),
+            $this->config->getConfig(),
             $this->getParamsAttribute()
         );
 

@@ -17,7 +17,7 @@ class SubmissionTest extends TestCase
         ])->setTimeLimit(1.2);
 
         $newSub = Submission::findOrFail($submission->id);
-        $this->assertEquals(1.2, $newSub->config['cpu_time_limit']);
+        $this->assertEquals(1.2, $newSub->getConfig('cpu_time_limit'));
     }
 
     /** @test */
@@ -52,12 +52,12 @@ class SubmissionTest extends TestCase
             'source_code' => "print('hello world')"
         ])->setConfig('cpu_time_limit', 1.2);
 
-        $this->assertEquals(1.2, $submission->config['cpu_time_limit']);
+        $this->assertEquals(1.2, $submission->getConfig('cpu_time_limit'));
 
         $submission->setConfig([
             'cpu_time_limit' => 8.4
         ]);
-        $this->assertEquals(8.4, $submission->config['cpu_time_limit']);
+        $this->assertEquals(8.4, $submission->getConfig('cpu_time_limit'));
     }
 
     /** @test */
@@ -85,13 +85,13 @@ class SubmissionTest extends TestCase
         ]);
 
         $submission->setTimeLimit(1.2);
-        $this->assertEquals(1.2, $submission->config['cpu_time_limit']);
+        $this->assertEquals(1.2, $submission->getConfig('cpu_time_limit'));
 
         $submission->setTimeLimitInMilliseconds(2200);
-        $this->assertEquals(2.2, $submission->config['cpu_time_limit']);
+        $this->assertEquals(2.2, $submission->getConfig('cpu_time_limit'));
         
         $submission->setDefaultTimeLimit();
-        $this->assertEquals(config('judge0.submission_config.cpu_time_limit'), $submission->config['cpu_time_limit']);
+        $this->assertEquals(config('judge0.submission_config.cpu_time_limit'), $submission->getConfig('cpu_time_limit'));
     }
 
     /** @test */
@@ -103,13 +103,13 @@ class SubmissionTest extends TestCase
         ]);
 
         $submission->setMemoryLimit(1024);
-        $this->assertEquals(1024, $submission->config['memory_limit']);
+        $this->assertEquals(1024, $submission->getConfig('memory_limit'));
 
         $submission->setMemoryLimitInMegabytes(2);
-        $this->assertEquals(2048, $submission->config['memory_limit']);
+        $this->assertEquals(2048, $submission->getConfig('memory_limit'));
 
         $submission->setDefaultMemoryLimit();
-        $this->assertEquals(config('judge0.submission_config.memory_limit'), $submission->config['memory_limit']);
+        $this->assertEquals(config('judge0.submission_config.memory_limit'), $submission->getConfig('memory_limit'));
     }
 
     /** @test */
