@@ -73,36 +73,6 @@ class Submission extends Model
         return $this;
     }
 
-    public static function retrieve(string $token)
-    {
-        $res = Judge0::getSubmission($token);
-        $submission = self::where('token', '=', $token)->firstOrFail();
-        if(isset($res['content']['status'])){
-            $submission->update([
-                'status' => $res['content']['status']
-            ]);
-        }
-        return $res;
-    }
-
-    public function retrieveFromJudge()
-    {
-        $res = Judge0::getSubmission($this->token);
-        $content = $res['content'];
-        if(isset($content['status'])){
-            $this->update([
-                'status' => $content['status'],
-                'stdout' => $content['stdout'],
-                'stderr' => $content['stderr'],
-                'time' => $content['time'],
-                'memory' => $content['memory'],
-                'compile_output' => $content['compile_output'],
-                'judged' => true,
-            ]);
-        }
-        return $res;
-    }
-
     public function setTimeLimit(float $seconds)
     {
         $this->setConfig('cpu_time_limit', $seconds);
