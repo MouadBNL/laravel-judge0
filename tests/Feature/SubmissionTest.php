@@ -19,10 +19,12 @@ class SubmissionTest extends TestCase
 
         $this->assertTrue($submission->exists);
 
-        $submission->setTimeLimit(4);
-        $s = Submission::find($submission->id)->firstOrFail();
-        $this->assertEquals(4, $s->config['cpu_time_limit']);
+        // ! add to unit tests
+        // $submission->setTimeLimit(4);
+        // $s = Submission::find($submission->id)->firstOrFail();
+        // $this->assertEquals(4, $s->config['cpu_time_limit']);
     }
+
     /** @test */
     public function is_can_save_submission_to_database()
     {
@@ -42,21 +44,19 @@ class SubmissionTest extends TestCase
         $submission = Submission::create([
             'language_id' => 71,
             'source_code' => "print('hello world')"
-        ]);
-        $res = $submission->submit();
+        ])->submit();
 
-        $this->assertEquals(201, $res['code']);
-        $this->assertEquals(0, $submission->status->id);
-        $this->assertEquals($res['content']['token'], $submission->token);
+        // $this->assertEquals(201, $res['code']);
+        $this->assertEquals(3, $submission->status->id);
+        // $this->assertEquals($res['content']['token'], $submission->token);
 
-        sleep(1);
-        $res = $submission->retrieveFromJudge();
+        // $res = $submission->retrieveFromJudge();
         
 
-        $this->assertEquals($submission->token, $res['content']['token']);
-        $this->assertEquals(200, $res['code']);
-        $this->assertEquals(3, $submission->status->id);
-        $this->assertEquals("Accepted", $submission->status->description);
+        // $this->assertEquals($submission->token, $res['content']['token']);
+        // $this->assertEquals(200, $res['code']);
+        // $this->assertEquals(3, $submission->status->id);
+        // $this->assertEquals("Accepted", $submission->status->description);
     }
 
     /** @test */
@@ -80,12 +80,9 @@ class SubmissionTest extends TestCase
             ->setInput('judge0')
             ->setExpectedOutput('the value you entered is : judge0')
             ->setTimeLimit(1) // seconds
-            ->setMemoryLimitInMegabytes(256);
-        $submission->submit();
-        sleep(2);
+            ->setMemoryLimitInMegabytes(256)
+            ->submit();
 
-        $submission->retrieveFromJudge();
-        
         $this->assertEquals('Accepted', $submission->status->description);
     }
 
@@ -98,12 +95,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::create([
             'language_id' => 71,
             'source_code' => "print('hello world')"
-        ]);
-        $submission->submit();
-
-        sleep(2);
-
-        $submission->retrieveFromJudge();
+        ])->submit();
 
         $submission->submit();
 
@@ -117,16 +109,12 @@ class SubmissionTest extends TestCase
         $submission = Submission::create([
             'language_id' => 71,
             'source_code' => "print('hello world')"
-        ]);
-        $submission->submit();
+        ])->submit();
 
-        sleep(2);
-
-        $submission->retrieveFromJudge();
-
-        $submission->submit();
+        $sub = $submission->submit();
 
         $this->assertTrue($submission->exists);
+        $this->assertEquals($sub->id, $submission->id);
     }
 
     /** @test */
@@ -138,12 +126,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::create([
             'language_id' => 71,
             'source_code' => "print('hello world')"
-        ]);
-        $submission->submit();
-
-        sleep(2);
-
-        $submission->retrieveFromJudge();
+        ])->submit();
 
         $submission->update([
             'source_code' => "print('hello world 2')"
@@ -158,12 +141,7 @@ class SubmissionTest extends TestCase
         $submission = Submission::create([
             'language_id' => 71,
             'source_code' => "print('hello world')"
-        ]);
-        $submission->submit();
-
-        sleep(2);
-
-        $submission->retrieveFromJudge();
+        ])->submit();
 
         $submission->update([
             'source_code' => "print('hello world 2')"

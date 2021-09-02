@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Mouadbnl\Judge0\Facades\Judge0;
 use Mouadbnl\Judge0\Services\SubmissionConfig;
 use Mouadbnl\Judge0\Services\SubmissionParams;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class Submission extends Model
 {
@@ -23,7 +24,7 @@ class Submission extends Model
     ];
 
     protected $responseBase64Attributes = [
-        'stdout', 'stderr'
+        'stdout', 'stderr', 'compile_output'
     ];
 
 
@@ -43,54 +44,36 @@ class Submission extends Model
 
     public function submit()
     {
-        if($this->judged){
-            if(config('judge0.throw_error_on_resubmit')){
-                throw new Exception("This submission has already been judged, and can not be rejudged");
-            }
-            return $this;
-        }
+        if(! $this->canBeRejudged()) return $this;
         $res = Judge0::postSubmission($this);
-        if(isset($res['content']['token'])){
-            $this->update([
-                'token' => $res['content']['token'],
-            ]);
-        }
-        if(isset($res['content']['status'])){
-            $this->update([
-                'status' => $res['content']['status']
-            ]);
-        }
-        return $res;
-    }
 
-    public static function retrieve(string $token)
-    {
-        $res = Judge0::getSubmission($token);
-        $submission = self::where('token', '=', $token)->firstOrFail();
-        if(isset($res['content']['status'])){
-            $submission->update([
-                'status' => $res['content']['status']
-            ]);
+        if($res['code'] != 201){
+            throw new Exception("The judge had an error processeing your request");
         }
-        return $res;
-    }
 
-    public function retrieveFromJudge()
-    {
-        $res = Judge0::getSubmission($this->token);
+        
+        if($this->getParams('base64'))
+        {
+            foreach ($this->responseBase64Attributes as $attr)
+            {
+                $res['content'][$attr] = base64_decode($res['content'][$attr]);
+            }
+        }
+        
         $content = $res['content'];
-        if(isset($content['status'])){
-            $this->update([
-                'status' => $content['status'],
-                'stdout' => $content['stdout'],
-                'stderr' => $content['stderr'],
-                'time' => $content['time'],
-                'memory' => $content['memory'],
-                'compile_output' => $content['compile_output'],
-                'judged' => true,
-            ]);
-        }
-        return $res;
+        $this->update([
+            'token'         => $content['token'],
+            'status'        => $content['status'],
+            'stdout'        => $content['stdout'],
+            'stderr'        => $content['stderr'],
+            'time'          => $content['time'],
+            'memory'        => $content['memory'],
+            'compile_output' => $content['compile_output'],
+            'response'      => $res,
+            'judged'        => true,
+        ]);
+
+        return $this;
     }
 
     public function setTimeLimit(float $seconds)
@@ -158,9 +141,16 @@ class Submission extends Model
     |
     */
 
+    public function getConfig(string $key)
+    {
+        return $this->config->getConfig($key);
+    }
+
     public function getConfigAttribute()
     {
-        return  json_decode($this->getAttributes()['config'], true);
+        return SubmissionConfig::init(
+            json_decode($this->getAttributes()['config'], true)
+        );
     }
 
     public function setConfigAttribute($config)
@@ -172,9 +162,14 @@ class Submission extends Model
         $this->attributes['config'] = json_encode($config->getConfig());
     }
 
+    public function getParams(string $key)
+    {
+        return $this->params->getParams($key);
+    }
+
     public function getParamsAttribute()
     {
-        return  json_decode($this->getAttributes()['params'], true);
+        return  SubmissionParams::init(json_decode($this->getAttributes()['params'], true));
     }
 
     public function setParamsAttribute($params)
@@ -196,7 +191,7 @@ class Submission extends Model
      */
     public function setConfig($key, $value = null)
     {
-        $config = SubmissionConfig::init($this->getConfigAttribute());
+        $config = $this->getConfigAttribute();
         if(is_array($key))
         {
             foreach ($key as $k => $v) {
@@ -228,7 +223,7 @@ class Submission extends Model
      */
     public function setParams($key, $value = null)
     {
-        $params = SubmissionParams::init($this->getParamsAttribute());
+        $params = $this->getParamsAttribute();
         if(is_array($key))
         {
             foreach ($key as $k => $v) {
@@ -259,11 +254,11 @@ class Submission extends Model
     {
         $attrs = array_merge(
             $this->attributes,
-            $this->getConfigAttribute(),
-            $this->getParamsAttribute()
+            $this->config->getConfig(),
+            $this->params->getParams()
         );
 
-        if($this->params['base64']){
+        if($this->getParams('base64')){
             foreach ($this->requestBase64Attributes as $attr) {
                 if(isset($attrs[$attr])){
                     $attrs[$attr] = base64_encode($attrs[$attr]);
@@ -276,11 +271,12 @@ class Submission extends Model
 
     public function getParamsUrl()
     {
-        return SubmissionParams::init($this->getParamsAttribute())->getUrl();
+        return $this->params->getUrl();
     }
+
     /*
     |--------------------------------------------------------------------------
-    | 
+    | Manipulating Status attribute
     |--------------------------------------------------------------------------
     */
 
@@ -304,7 +300,27 @@ class Submission extends Model
         return json_decode($this->attributes['status']);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Manipulating Response attribute
+    |--------------------------------------------------------------------------
+    */
 
+    public function setResponseAttribute(array $res)
+    {
+        $this->attributes['response'] = json_encode($res);
+    }
+
+    public function getResponseAttribute()
+    {
+        return json_decode($this->attributes['response'], true);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * ! this overides the default Model function
@@ -320,5 +336,17 @@ class Submission extends Model
             throw new Exception("This submission has already been judged and cannot be updated");
         }
         parent::update($attributes, $options);
+    }
+
+    protected function canBeRejudged(): bool
+    {
+        if($this->judged && !config('judge0.resubmit_judged_submission'))
+        {
+            if(config('judge0.throw_error_on_resubmit')){
+                throw new Exception("This submission has already been judged, and can not be rejudged");
+            }
+            return false;
+        }
+        return true;
     }
 }

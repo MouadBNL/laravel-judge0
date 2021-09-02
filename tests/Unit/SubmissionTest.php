@@ -17,7 +17,7 @@ class SubmissionTest extends TestCase
         ])->setTimeLimit(1.2);
 
         $newSub = Submission::findOrFail($submission->id);
-        $this->assertEquals(1.2, $newSub->config['cpu_time_limit']);
+        $this->assertEquals(1.2, $newSub->getConfig('cpu_time_limit'));
     }
 
     /** @test */
@@ -52,12 +52,12 @@ class SubmissionTest extends TestCase
             'source_code' => "print('hello world')"
         ])->setConfig('cpu_time_limit', 1.2);
 
-        $this->assertEquals(1.2, $submission->config['cpu_time_limit']);
+        $this->assertEquals(1.2, $submission->getConfig('cpu_time_limit'));
 
         $submission->setConfig([
             'cpu_time_limit' => 8.4
         ]);
-        $this->assertEquals(8.4, $submission->config['cpu_time_limit']);
+        $this->assertEquals(8.4, $submission->getConfig('cpu_time_limit'));
     }
 
     /** @test */
@@ -68,12 +68,12 @@ class SubmissionTest extends TestCase
             'source_code' => "print('hello world')"
         ])->setParams('base64', false);
 
-        $this->assertEquals(false, $submission->params['base64']);
+        $this->assertEquals(false, $submission->getParams('base64'));
 
         $submission->setParams([
             'wait' => true
         ]);
-        $this->assertEquals(true, $submission->params['wait']);
+        $this->assertEquals(true, $submission->getParams('wait'));
     }
 
     /** @test */
@@ -85,13 +85,13 @@ class SubmissionTest extends TestCase
         ]);
 
         $submission->setTimeLimit(1.2);
-        $this->assertEquals(1.2, $submission->config['cpu_time_limit']);
+        $this->assertEquals(1.2, $submission->getConfig('cpu_time_limit'));
 
         $submission->setTimeLimitInMilliseconds(2200);
-        $this->assertEquals(2.2, $submission->config['cpu_time_limit']);
+        $this->assertEquals(2.2, $submission->getConfig('cpu_time_limit'));
         
         $submission->setDefaultTimeLimit();
-        $this->assertEquals(config('judge0.submission_config.cpu_time_limit'), $submission->config['cpu_time_limit']);
+        $this->assertEquals(config('judge0.submission_config.cpu_time_limit'), $submission->getConfig('cpu_time_limit'));
     }
 
     /** @test */
@@ -103,13 +103,13 @@ class SubmissionTest extends TestCase
         ]);
 
         $submission->setMemoryLimit(1024);
-        $this->assertEquals(1024, $submission->config['memory_limit']);
+        $this->assertEquals(1024, $submission->getConfig('memory_limit'));
 
         $submission->setMemoryLimitInMegabytes(2);
-        $this->assertEquals(2048, $submission->config['memory_limit']);
+        $this->assertEquals(2048, $submission->getConfig('memory_limit'));
 
         $submission->setDefaultMemoryLimit();
-        $this->assertEquals(config('judge0.submission_config.memory_limit'), $submission->config['memory_limit']);
+        $this->assertEquals(config('judge0.submission_config.memory_limit'), $submission->getConfig('memory_limit'));
     }
 
     /** @test */
@@ -150,9 +150,6 @@ class SubmissionTest extends TestCase
             'source_code' => "print('hello world')"
         ])->setParams('base64', false);
         $res = $submission->submit();
-        $this->assertEquals(201, $res['code']);
-        sleep(2);
-        $submission->retrieveFromJudge();
         $this->assertEquals('Accepted', $submission->status->description);    
     }
 
@@ -185,18 +182,13 @@ class SubmissionTest extends TestCase
             '
             ])
             ->setTimeLimit(1) // seconds
-            ->setMemoryLimitInMegabytes(256);
+            ->setMemoryLimitInMegabytes(256)
+            ->submit();
+            
         $sub2 = Submission::create([
             'language_id' => 71,
             'source_code' => "print('hello \t \n world')" // to get an stderr
-        ]);
-        $sub1->submit();
-        $sub2->submit();
-
-        sleep(2);
-
-        $sub1->retrieveFromJudge();
-        $sub2->retrieveFromJudge();
+        ])->submit();
 
         $this->assertNotNull($sub1->stdout);
         $this->assertEquals(
@@ -209,5 +201,7 @@ class SubmissionTest extends TestCase
         $this->assertNotNull($sub1->time);
         $this->assertNotNull($sub1->memory);
         $this->assertNotNull($sub2->stderr);
+        $this->assertNotNull($sub1->response);
+        $this->assertNotNull($sub2->response);
     }
 }
