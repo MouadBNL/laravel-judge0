@@ -190,7 +190,6 @@ class SubmissionTest extends TestCase
             'source_code' => "print('hello \t \n world')" // to get an stderr
         ])->submit();
 
-
         $this->assertNotNull($sub1->stdout);
         $this->assertEquals(
             'hello world', 
@@ -202,5 +201,7 @@ class SubmissionTest extends TestCase
         $this->assertNotNull($sub1->time);
         $this->assertNotNull($sub1->memory);
         $this->assertNotNull($sub2->stderr);
+        $this->assertNotNull($sub1->response);
+        $this->assertNotNull($sub2->response);
     }
 }

@@ -24,7 +24,7 @@ class Submission extends Model
     ];
 
     protected $responseBase64Attributes = [
-        'stdout', 'stderr'
+        'stdout', 'stderr', 'compile_output'
     ];
 
 
@@ -45,31 +45,34 @@ class Submission extends Model
     public function submit()
     {
         if(! $this->canBeRejudged()) return $this;
-
         $res = Judge0::postSubmission($this);
-        if(isset($res['content']['token'])){
-            $this->update([
-                'token' => $res['content']['token'],
-            ]);
+
+        if($res['code'] != 201){
+            throw new Exception("The judge had an error processeing your request");
         }
-        if(isset($res['content']['status'])){
-            $this->update([
-                'status' => $res['content']['status']
-            ]);
+
+        
+        if($this->getParams('base64'))
+        {
+            foreach ($this->responseBase64Attributes as $attr)
+            {
+                $res['content'][$attr] = base64_decode($res['content'][$attr]);
+            }
         }
-        $res = Judge0::getSubmission($this->token);
+        
         $content = $res['content'];
-        if(isset($content['status'])){
-            $this->update([
-                'status' => $content['status'],
-                'stdout' => $content['stdout'],
-                'stderr' => $content['stderr'],
-                'time' => $content['time'],
-                'memory' => $content['memory'],
-                'compile_output' => $content['compile_output'],
-                'judged' => true,
-            ]);
-        }
+        $this->update([
+            'token'         => $content['token'],
+            'status'        => $content['status'],
+            'stdout'        => $content['stdout'],
+            'stderr'        => $content['stderr'],
+            'time'          => $content['time'],
+            'memory'        => $content['memory'],
+            'compile_output' => $content['compile_output'],
+            'response'      => $res,
+            'judged'        => true,
+        ]);
+
         return $this;
     }
 
@@ -270,9 +273,10 @@ class Submission extends Model
     {
         return $this->params->getUrl();
     }
+
     /*
     |--------------------------------------------------------------------------
-    | 
+    | Manipulating Status attribute
     |--------------------------------------------------------------------------
     */
 
@@ -296,7 +300,27 @@ class Submission extends Model
         return json_decode($this->attributes['status']);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Manipulating Response attribute
+    |--------------------------------------------------------------------------
+    */
 
+    public function setResponseAttribute(array $res)
+    {
+        $this->attributes['response'] = json_encode($res);
+    }
+
+    public function getResponseAttribute()
+    {
+        return json_decode($this->attributes['response'], true);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * ! this overides the default Model function

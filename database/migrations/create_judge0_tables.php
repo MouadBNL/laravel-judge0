@@ -33,6 +33,7 @@ class CreateJudge0Tables extends Migration
 
             $table->json("config")->nullable();
             $table->json("params")->nullable();
+            $table->json("response")->nullable();
 
             $table->boolean('judged')->default(0);
 
