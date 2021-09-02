@@ -14,14 +14,14 @@ class SubmissionParamsTest extends TestCase
         $params = SubmissionParams::init([
             'base64' => false
         ]);
-        $this->assertEquals(false, $params->base64);
+        $this->assertEquals(false, $params->getParams('base64'));
     }
 
     /** @test */
     public function submissionparams_can_set_value_after_instantiating()
     {
         $params = SubmissionParams::init()->set('base64', false);
-        $this->assertEquals(false, $params->base64);
+        $this->assertEquals(false, $params->getParams('base64'));
     }
 
     /** @test */
@@ -31,7 +31,7 @@ class SubmissionParamsTest extends TestCase
         $this->assertInstanceOf(SubmissionParams::class, $params);
         $params->set('base64', false);
         $this->assertInstanceOf(SubmissionParams::class, $params);
-        $this->assertEquals(false, $params->base64);
+        $this->assertEquals(false, $params->getParams('base64'));
     }
 
     /** @test */

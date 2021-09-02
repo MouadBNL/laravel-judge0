@@ -68,12 +68,12 @@ class SubmissionTest extends TestCase
             'source_code' => "print('hello world')"
         ])->setParams('base64', false);
 
-        $this->assertEquals(false, $submission->params['base64']);
+        $this->assertEquals(false, $submission->getParams('base64'));
 
         $submission->setParams([
             'wait' => true
         ]);
-        $this->assertEquals(true, $submission->params['wait']);
+        $this->assertEquals(true, $submission->getParams('wait'));
     }
 
     /** @test */

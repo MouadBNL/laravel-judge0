@@ -159,9 +159,14 @@ class Submission extends Model
         $this->attributes['config'] = json_encode($config->getConfig());
     }
 
+    public function getParams(string $key)
+    {
+        return $this->params->getParams($key);
+    }
+
     public function getParamsAttribute()
     {
-        return  json_decode($this->getAttributes()['params'], true);
+        return  SubmissionParams::init(json_decode($this->getAttributes()['params'], true));
     }
 
     public function setParamsAttribute($params)
@@ -215,7 +220,7 @@ class Submission extends Model
      */
     public function setParams($key, $value = null)
     {
-        $params = SubmissionParams::init($this->getParamsAttribute());
+        $params = $this->getParamsAttribute();
         if(is_array($key))
         {
             foreach ($key as $k => $v) {
@@ -247,10 +252,10 @@ class Submission extends Model
         $attrs = array_merge(
             $this->attributes,
             $this->config->getConfig(),
-            $this->getParamsAttribute()
+            $this->params->getParams()
         );
 
-        if($this->params['base64']){
+        if($this->getParams('base64')){
             foreach ($this->requestBase64Attributes as $attr) {
                 if(isset($attrs[$attr])){
                     $attrs[$attr] = base64_encode($attrs[$attr]);
@@ -263,7 +268,7 @@ class Submission extends Model
 
     public function getParamsUrl()
     {
-        return SubmissionParams::init($this->getParamsAttribute())->getUrl();
+        return $this->params->getUrl();
     }
     /*
     |--------------------------------------------------------------------------
