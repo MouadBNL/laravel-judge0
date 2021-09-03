@@ -40,4 +40,12 @@ class SubmissionConfigTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $conf = SubmissionConfig::init()->set('test', 1.2);
     }
+
+    /** @test */
+    // public function it_valdiates_config()
+    // {
+    //     $this->expectException(InvalidArgumentException::class);
+
+
+    // }
 }

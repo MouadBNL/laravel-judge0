@@ -40,4 +40,23 @@ class SubmissionParamsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $params = SubmissionParams::init()->set('test', false);
     }
+
+    /** @test */
+    public function it_valdiates_params_in_init()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        SubmissionParams::init([
+            'base64' => 'test'
+        ]);
+    }
+
+    /** @test */
+    public function it_valdiates_params_in_set()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $params = SubmissionParams::init();
+        $params->set('wait', 'test');
+    }
 }

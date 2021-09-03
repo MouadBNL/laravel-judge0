@@ -10,24 +10,29 @@ class SubmissionParams
      * @property array $paramKeys the keys availabe to get|change
      */
     protected array $paramsKeys = [
-        'base64' => ['bool'],
-        'wait' => ['bool'],
-        'feilds' => ['string']
+        'base64' => ['boolean'],
+        'wait' => ['boolean'],
+        'fields' => ['string']
     ];
 
     /**
      * @property array $params the params keys and values
      */
-    protected array $params;
+    protected array $params = [
+        'base64' => true,
+        'wait' => true,
+        'fields' => '*'
+    ];
 
     /**
      * @param array $params overriding the default params
      */
     public function __construct(array $params = [])
     {
-        // TODO add validation here
         foreach ($this->paramsKeys as $key => $types) {
-            $this->params[$key] = $params[$key] ?? config('judge0.submission_params.' . $key);
+            $value = $params[$key] ?? config('judge0.submission_params.' . $key);
+            $this->valdiateKeyValue($key, $value);
+            $this->params[$key] = $value;
         }
     }
     
@@ -42,14 +47,12 @@ class SubmissionParams
     /**
      * Changing something in the default params
      * @param string $key key of the params to set
-     * @param string $value the value of the new params
+     * @param any $value the value of the new params
      * @return self
      */
-    public function set(string $key, string $value)
+    public function set(string $key, $value)
     {
-        if(! isset($this->params[$key])){
-            throw new InvalidArgumentException("Error property '" . $key . "' not found");
-        }
+        $this->valdiateKeyValue($key, $value);
         
         $this->params[$key] = $value;
         return $this;
@@ -76,7 +79,7 @@ class SubmissionParams
         $params = [
             'base64_encoded' => ($this->params['base64'] ? 'true' : 'false'),
             'wait' => ($this->params['wait'] ? 'true' : 'false'),
-            'feilds' => (isset($this->params['fields']) && $this->params['fields'] !='*') ? '&feilds=' . $this->params['fields'] : ''
+            'fields' => (isset($this->params['fields']) && $this->params['fields'] !='*') ? '&fields=' . $this->params['fields'] : ''
         ];
         return '?' . implode('&', array_map(
             function($k, $v){
@@ -85,5 +88,19 @@ class SubmissionParams
             $params,
             array_keys($params)
         ));
+    }
+
+    protected function valdiateKeyValue(string $key, $value)
+    {
+        if(! array_key_exists($key, $this->paramsKeys))
+        {
+            throw new InvalidArgumentException("SubmissionParams does not contain ". $key .".");
+        }
+
+        $types = $this->paramsKeys[$key];
+        $type = strtolower(gettype($value));
+        if(! in_array($type, $types)){
+            throw new InvalidArgumentException("Invalid type, " . $key . " must be of type ". implode(', ', $types) .".");
+        }
     }
 }
