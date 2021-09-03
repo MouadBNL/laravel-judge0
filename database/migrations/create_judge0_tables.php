@@ -19,7 +19,7 @@ class CreateJudge0Tables extends Migration
             $table->string("token")->nullable();
             $table->json("status")->nullable();
 
-            // $table->morphs('submitter');
+            $table->nullableMorphs('submitter');
             $table->integer("language_id");
             $table->string("language")->nullable();
             $table->longText("source_code");

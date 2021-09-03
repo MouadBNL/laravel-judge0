@@ -4,6 +4,7 @@ namespace Mouadbnl\Judge0\Models;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use InvalidArgumentException;
 use Mouadbnl\Judge0\Facades\Judge0;
 use Mouadbnl\Judge0\Services\SubmissionConfig;
@@ -48,6 +49,11 @@ class Submission extends Model
     public function getTable()
     {
         return config('judge0.table_names.submissions', parent::getTable());
+    }
+
+    public function submitter(): MorphTo
+    {
+        return $this->morphTo();
     }
 
     public function submit()
