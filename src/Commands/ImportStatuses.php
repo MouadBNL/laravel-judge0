@@ -4,6 +4,7 @@ namespace Mouadbnl\Judge0\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Mouadbnl\Judge0\Facades\Judge0;
 use Mouadbnl\Judge0\Models\Statuses;
 
@@ -16,6 +17,8 @@ class ImportStatuses extends Command
     public function handle()
     {
         $this->testConnection();
+
+        $this->resetTable();
 
         $statuses = $this->loadStatuses();
 
@@ -54,5 +57,17 @@ class ImportStatuses extends Command
             Statuses::firstOrCreate(['id' => $status->id], ['description' => $status->description]);
         }
         $this->info('Insertion done!');
+    }
+
+    protected function resetTable()
+    {
+        $this->info('Resetting the table will remove all content you have in the statuses table.');
+        $ans = $this->ask('Do you want to rest the table ? (y/n) : ');
+        if($ans == 'y' or $ans=='Y')
+        {
+            $this->info('Resetting the table...');
+            DB::table(config('judge0.table_names.statuses'))->delete();
+            $this->info('Done resetting.');
+        }
     }
 }
