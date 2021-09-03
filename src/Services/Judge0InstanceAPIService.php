@@ -16,11 +16,11 @@ class Judge0InstanceAPIService implements Judge0Interface
     function __construct()
     {
         $this->client = new Client([
-            'base_uri' => config('judge0.config.base_uri'),
+            'base_uri' => config('judge0.drivers.instance.base_uri'),
             'timeout' => 5.0,
-            'headers' => config('judge0.config.headers')
+            'headers' => config('judge0.drivers.instance.headers')
         ]);
-        $this->endpoints = config('judge0.config.endpoints');
+        $this->endpoints = config('judge0.drivers.instance.endpoints');
     }
 
     /*

@@ -14,13 +14,13 @@ class Judge0ServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/judge0.php', 'judge0');
 
         // Setting default judge0.config
-        config([
-            'judge0.config' => config('judge0.drivers.'.config('judge0.default'))
-        ]);
+        // config([
+        //     'judge0.config' => config('judge0.drivers.'.config('judge0.default'))
+        // ]);
 
         $this->app->bind('judge0', function()
         {
-            $class = config('judge0.config.class');
+            $class = config('judge0.drivers.'. config('judge0.default') .'.class');
             if(! class_exists($class)){
                 throw new RuntimeException("Can not find class ". $class .", please set a valide full class name in judge0 config file.");
                 
