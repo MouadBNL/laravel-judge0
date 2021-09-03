@@ -32,12 +32,7 @@ class Judge0InstanceAPIService implements Judge0Interface
     function authenticate()
     {
         $endpoint = $this->endpoints['authenticate'];
-        try {
-            $res = $this->client->request($endpoint['method'], $endpoint['uri']);
-            return $this->formatResponse($res);
-        } catch (ClientException $e) {
-            return $this->formatClientException($e);
-        }
+        return $this->sendRequest($endpoint['method'], $endpoint['uri']);
     }
 
     /*
