@@ -39,5 +39,23 @@ class CreateJudge0Tables extends Migration
 
             $table->timestamps();
         });
+
+        Schema::create($tables['statuses'], function (Blueprint $table){
+            $table->id();
+            $table->string('description');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        $tableNames = config('judge0.table_names');
+
+        if (empty($tables)) {
+            throw new \Exception('Can not load table_names from config/judge0.php. Run [php artisan config:clear] and try again.');
+        }
+
+        Schema::drop($tableNames['submissions']);
+        Schema::drop($tableNames['statuses']);
     }
 };
