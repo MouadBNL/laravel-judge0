@@ -5,9 +5,10 @@ namespace Mouadbnl\Judge0\Services;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
+use Mouadbnl\Judge0\Interfaces\Judge0Interface;
 use Mouadbnl\Judge0\Models\Submission;
 
-class Judge0InstanceAPIService
+class Judge0InstanceAPIService implements Judge0Interface
 {
     protected Client $client;
     protected array $endpoints;

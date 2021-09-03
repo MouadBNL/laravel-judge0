@@ -2,6 +2,7 @@
 
 namespace Mouadbnl\Judge0\Interfaces;
 
+use Mouadbnl\Judge0\Models\Submission;
 use Mouadbnl\Judge0\SubmissionConfig;
 use Mouadbnl\Judge0\SubmissionParams;
 
@@ -30,32 +31,20 @@ interface Judge0Interface
     |
     */
 
-    public function postSubmission(
-        string  $source_code,
-        int     $language_id,
-        ?string $stdin = null,
-        ?string $expected_output = null,
-        SubmissionConfig $config,
-        SubmissionParams $params	
-    );
+    /**
+     * @param Submission $submission the submission to send to the Judge0
+     * @param array $options Additional options to send with the request
+     */
+    function postSubmission(Submission $submission, array $options = []);
 
-    public function getSubmission(string $token, SubmissionParams $params);
+    /**
+     * @param string $token The token of the submmsion to retrieve
+     */
+    public function getSubmission(string $token);
 
-    public function deleteSubmission(string $token);
+    // public function getBatchedSubmissions(Array $tokens, SubmissionParams $params);
 
-    public function postBatchedSubmissions(
-        Array $submissions,
-        string  $source_code,
-        int     $language_id,
-        ?string $stdin = null,
-        ?string $expected_output = null,
-        SubmissionConfig $config,
-        SubmissionParams $params	
-    );
-
-    public function getBatchedSubmissions(Array $tokens, SubmissionParams $params);
-
-    public function deleteBatchedSubmissions(Array $tokens);
+    // public function deleteBatchedSubmissions(Array $tokens);
 
 
     /*
@@ -68,10 +57,20 @@ interface Judge0Interface
     |
     */
 
+    /**
+     * Getting allowed languages from Judge0 API
+     */
     public function getLanguages();
 
+    /**
+     * Getting all language available in Judge0
+     */
     public function getAllLanguages();
 
+    /**
+     * Getting a language from judge API
+     * @param id language id
+     */
     public function getLanguage(int $id);
 
 
@@ -85,19 +84,19 @@ interface Judge0Interface
     |
     */
 
-    public function getAbout();
+    // public function getAbout();
 
     public function getStatuses();
 
-    public function getConfig();
-
     public function getStatistics();
-
+    
     public function getWorkers();
+    
+    // public function getConfig();
 
-    public function getVersion();
+    // public function getVersion();
 
-    public function getIsolate();
+    // public function getIsolate();
 
-    public function getLicense();
+    // public function getLicense();
 }
