@@ -70,7 +70,7 @@ class SubmissionParams
     }
 
     /**
-     * Get the formated get url
+     * Get the formated url query
      * ?base64_encode=true&wait=true&fields=*
      * @return string $getparamsUrl
      */

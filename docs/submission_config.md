@@ -1,9 +1,9 @@
 # Submission config
-Here we will discuss the submission config
+Here we will discuss the submission configuration.
 
 ## Attributes of the configuration
 There are many different attributes you can change about the submission configuration
-I strongly recomande to read [Judge0 Documentation](https://github.com/judge0/judge0/blob/master/docs/api/submissions/submissions.md).
+I strongly recommend to read [Judge0 Documentation](https://github.com/judge0/judge0/blob/master/docs/api/submissions/submissions.md).
 This is the full list of what configuration you can set on a submission
 |Name |Type |Unit |Description |
 |:---:|:----|:----|:-----------|
@@ -36,7 +36,7 @@ $conf = new SubmissionConfig();
 // Using a static constructor
 $conf = new SubmissionConfig::init();
 ```
-The instance created will inherite the values in the `judge0` config file.
+The instance created will inherite the values in the `submission_config` key in the `judge0` config file.
 If you want to override any value:
 ```php
 $conf = new SubmissionConfig([
@@ -73,5 +73,7 @@ $submission->config = SubmissionConfig::init([
 But there is an easy way to change any config on submission wihtou creating a new instance:
 ```php
 $submission->setConfig('cpu_time_limit', 1.2)
-    ->setConfig('memory_limit', 10240);
+    ->setConfig([
+        'memory_limit' => 10240
+    ]);
 ```
