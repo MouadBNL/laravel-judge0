@@ -14,7 +14,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^8.0|^7.4",
-        "guzzlehttp/guzzle": "7.4.x-dev",
+        "guzzlehttp/guzzle": "^7",
         "illuminate/auth": "^6.0|^7.0|^8.0",
         "illuminate/contracts": "^6.0|^7.0|^8.0",
         "illuminate/support": "^8.0"
