@@ -201,7 +201,8 @@ return [
 
     'table_names' => [
         'submissions' => 'submissions',
-        'statuses'    => 'judge0_statuses'
+        'statuses'    => 'judge0_statuses',
+        'languages'   => 'judge0_languages'
     ]
 
 ];

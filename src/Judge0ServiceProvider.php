@@ -3,6 +3,7 @@
 namespace Mouadbnl\Judge0;
 
 use Illuminate\Support\ServiceProvider;
+use Mouadbnl\Judge0\Commands\ImportLanguages;
 use Mouadbnl\Judge0\Commands\ImportStatuses;
 use RuntimeException;
 
@@ -34,6 +35,7 @@ class Judge0ServiceProvider extends ServiceProvider
 
             $this->commands([
                 ImportStatuses::class,
+                ImportLanguages::class,
             ]);
 
             $this->publishes([

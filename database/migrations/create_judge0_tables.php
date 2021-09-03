@@ -45,6 +45,12 @@ class CreateJudge0Tables extends Migration
             $table->string('description');
             $table->timestamps();
         });
+
+        Schema::create($tables['languages'], function (Blueprint $table){
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
     }
 
     public function down()
@@ -57,5 +63,6 @@ class CreateJudge0Tables extends Migration
 
         Schema::drop($tableNames['submissions']);
         Schema::drop($tableNames['statuses']);
+        Schema::drop($tableNames['languages']);
     }
 };
