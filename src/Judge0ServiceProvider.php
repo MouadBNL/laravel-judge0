@@ -44,7 +44,7 @@ class Judge0ServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__.'/../database/migrations' => base_path('database/migrations'),
-            ], 'judge0-migration');
+            ], 'judge0-migrations');
 
         }
 
