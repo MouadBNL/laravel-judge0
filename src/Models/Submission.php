@@ -109,9 +109,9 @@ class Submission extends Model
     }
 
     /**
-     * @param float $kiobytes The memory limit in kilobytes before declaring MLE status
+     * @param int $kiobytes The memory limit in kilobytes before declaring MLE status
      */
-    public function setMemoryLimit(float $kilobyte)
+    public function setMemoryLimit(int $kilobyte)
     {
         $this->setConfig('memory_limit', $kilobyte);
         return $this;
@@ -122,7 +122,7 @@ class Submission extends Model
      */
     public function setMemoryLimitInMegabytes(float $megabytes)
     {
-        $this->setConfig('memory_limit', $megabytes * 1024);
+        $this->setConfig('memory_limit', intval($megabytes * 1024));
         return $this;
     }
 
