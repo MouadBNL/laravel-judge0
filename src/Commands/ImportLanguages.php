@@ -52,18 +52,23 @@ class ImportLanguages extends Command
     {
         $this->info('Inserting Languages in the database');
 
+        $bar = $this->output->createProgressBar(count($languages));
+
         foreach ($languages as $lang) {
-            $this->info('Inseting Languages :'. $lang->name);
+            // $this->info('Inseting Languages :'. $lang->name);
             Languages::firstOrCreate(['id' => $lang->id], ['name' => $lang->name]);
+            $bar->advance();
         }
+
+        $bar->start();
+
         $this->info('Insertion done!');
     }
 
     protected function resetTable()
     {
         $this->info('Resetting the table will remove all content you have in the languages table.');
-        $ans = $this->ask('Do you want to rest the table ? (y/n) : ');
-        if($ans == 'y' or $ans=='Y')
+        if($this->confirm('Do you want to rest the table ?', true))
         {
             $this->info('Resetting the table...');
             DB::table(config('judge0.table_names.languages'))->delete();

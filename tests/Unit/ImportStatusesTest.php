@@ -16,7 +16,13 @@ class ImportStatusesTest extends TestCase
 
         $this->assertTrue(Statuses::all()->isEmpty());
 
-        Artisan::call('judge0:import-statuses');
+        $cmd = $this->artisan('judge0:import-statuses');
+        $cmd->expectsConfirmation(
+            'Do you want to rest the table ?',
+            'yes'
+        );
+
+        $cmd->execute();
 
         $this->assertFalse(Statuses::all()->isEmpty());
     }

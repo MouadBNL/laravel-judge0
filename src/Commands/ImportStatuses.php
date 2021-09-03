@@ -52,18 +52,25 @@ class ImportStatuses extends Command
     {
         $this->info('Inserting statuses in the database');
 
+        $bar = $this->output->createProgressBar(count($statuses));
+
+        $bar->start();
+
         foreach ($statuses as $status) {
-            $this->info('Inseting Status of id:'. $status->id);
+            // $this->info('Inseting Status of id:'. $status->id);
             Statuses::firstOrCreate(['id' => $status->id], ['description' => $status->description]);
+            $bar->advance();
         }
+
+        $bar->finish();
+
         $this->info('Insertion done!');
     }
 
     protected function resetTable()
     {
         $this->info('Resetting the table will remove all content you have in the statuses table.');
-        $ans = $this->ask('Do you want to rest the table ? (y/n) : ');
-        if($ans == 'y' or $ans=='Y')
+        if($this->confirm('Do you want to rest the table ?', true))
         {
             $this->info('Resetting the table...');
             DB::table(config('judge0.table_names.statuses'))->delete();

@@ -16,7 +16,13 @@ class ImportLanguagesTest extends TestCase
 
         $this->assertTrue(Languages::all()->isEmpty());
 
-        Artisan::call('judge0:import-languages');
+        $cmd = $this->artisan('judge0:import-languages');
+        $cmd->expectsConfirmation(
+            'Do you want to rest the table ?',
+            'yes'
+        );
+
+        $cmd->execute();
 
         $this->assertFalse(Languages::all()->isEmpty());
     }
