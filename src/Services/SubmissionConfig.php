@@ -7,19 +7,19 @@ use InvalidArgumentException;
 
 class SubmissionConfig
 {
-    protected $configItems = [
-        'cpu_time_limit'                                => ['float'],
-        'cpu_extra_time'                                => ['float'],
-        'wall_time_limit'                               => ['float'],
-        'memory_limit'                                  => ['float'],
-        'stack_limit'                                   => ['float'],
-        'max_processes_and_or_threads'                  => ['int'],
-        'enable_per_process_and_thread_time_limit'      => ['bool'],
-        'enable_per_process_and_thread_memory_limit'    => ['bool'],
-        'max_file_size'                                 => ['int'],
-        'redirect_stderr_to_stdout'                     => ['bool'],
-        'enable_network'                                => ['bool'],
-        'number_of_runs'                                => ['int'],
+    protected $configKeys = [
+        'cpu_time_limit'                                => ['float', 'integer', 'double'],
+        'cpu_extra_time'                                => ['float', 'integer', 'double'],
+        'wall_time_limit'                               => ['float', 'integer', 'double'],
+        'memory_limit'                                  => ['float', 'integer', 'double'],
+        'stack_limit'                                   => ['float', 'integer', 'double'],
+        'max_processes_and_or_threads'                  => ['integer'],
+        'enable_per_process_and_thread_time_limit'      => ['boolean'],
+        'enable_per_process_and_thread_memory_limit'    => ['boolean'],
+        'max_file_size'                                 => ['integer'],
+        'redirect_stderr_to_stdout'                     => ['boolean'],
+        'enable_network'                                => ['boolean'],
+        'number_of_runs'                                => ['integer'],
     
         // will send a PUT request with the submission in the body
         'callback_url'                                  => ['string', 'null'],
@@ -34,9 +34,10 @@ class SubmissionConfig
 
     public function __construct(array $config)
     {
-        // TODO add validation here
-        foreach ($this->configItems as $key => $types) {
-            $this->config[$key] = $config[$key] ?? config('judge0.submission_config.' . $key);
+        foreach ($this->configKeys as $key => $types) {
+            $value = $config[$key] ?? config('judge0.submission_config.' . $key);
+            $this->valdiateKeyValue($key, $value);
+            $this->config[$key] = $value;
         }
     }
     
@@ -53,16 +54,12 @@ class SubmissionConfig
     /**
      * Changing something in the default config
      * @param string $key key of the config to set
-     * @param string $value the value of the new config
+     * @param any $value the value of the new config
      * @return self
      */
-    public function set(string $key, string $value): self
+    public function set(string $key, $value): self
     {
-        // TODO add validation here for the the provided key
-        if(! array_key_exists($key, $this->config)){
-            throw new InvalidArgumentException("Error property '" . $key . "' not found");
-        }
-        
+        $this->valdiateKeyValue($key, $value);
         $this->config[$key] = $value;
         return $this;
     }
@@ -88,5 +85,19 @@ class SubmissionConfig
             $arr[$key] = $value;
         }
         return $this;
+    }
+
+    protected function valdiateKeyValue(string $key, $value)
+    {
+        if(! array_key_exists($key, $this->configKeys))
+        {
+            throw new InvalidArgumentException("SubmissionParams does not contain ". $key .".");
+        }
+
+        $types = $this->configKeys[$key];
+        $type = strtolower(gettype($value));
+        if(! in_array($type, $types)){
+            throw new InvalidArgumentException("Invalid type, " . $key . " must be of type ". implode(', ', $types) .".");
+        }
     }
 }

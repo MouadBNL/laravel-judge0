@@ -241,9 +241,9 @@ class Submission extends Model
     /**
      * Setting one or mutiple config values
      * @param string|array $key array of config to override, ot the single key to override
-     * @param string $value the value to set for the provided key
+     * @param any $value the value to set for the provided key
      */
-    public function setConfig($key, string $value = null)
+    public function setConfig($key, $value = null)
     {
         $config = $this->getConfigAttribute();
         if(is_array($key))
@@ -270,7 +270,7 @@ class Submission extends Model
     /**
      * Setting one or mutiple params values
      * @param string|array $key array of params to override, ot the single key to override
-     * @param string $value the value to set for the provided key
+     * @param any $value the value to set for the provided key
      */
     public function setParams($key, $value = null)
     {

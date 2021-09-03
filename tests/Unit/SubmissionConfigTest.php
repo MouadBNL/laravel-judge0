@@ -42,10 +42,21 @@ class SubmissionConfigTest extends TestCase
     }
 
     /** @test */
-    // public function it_valdiates_config()
-    // {
-    //     $this->expectException(InvalidArgumentException::class);
+    public function it_valdiates_config_in_init()
+    {
+        $this->expectException(InvalidArgumentException::class);
 
+        SubmissionConfig::init([
+            'cpu_time_limit' => 'test'
+        ]);
+    }
 
-    // }
+    /** @test */
+    public function it_valdiates_config_in_set()
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $params = SubmissionConfig::init();
+        $params->set('cpu_time_limit', 'test');
+    }
 }
