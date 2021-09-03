@@ -7,7 +7,9 @@ return [
 
     'resubmit_judged_submission' => false,
     'throw_error_on_resubmit' => true,
-    'lock_submisson_after_judging' => true,
+    'lock_submisson_after_judging' => false,
+
+    'exception_on_failed_requests' => true,
 
     'default' => 'instance',
 

@@ -189,16 +189,17 @@ class Judge0InstanceAPIService
      * @return ClientException if the request was unsuccessful and config allows it to
      *                          throw the error
      */
-    protected function sendRequest(string $method, string $uri, array $options = [])
+    public function sendRequest(string $method, string $uri, array $options = [])
     {
         try {
             return $this->formatResponse(
                 $this->client->request($method, $uri, $options)
             );
         } catch (ClientException $e) {
-            throw $e;
-            // TODO thow or return a response based on the judge0 config
-            // return $this->formatClientException($e);
+            if(config('judge0.exception_on_failed_requests')){
+                throw $e;
+            }
+            return $this->formatClientException($e);
         }
     }
 }

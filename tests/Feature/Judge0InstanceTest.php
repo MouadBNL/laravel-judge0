@@ -2,6 +2,7 @@
 
 namespace Mouadbnl\Judge0\Tests\Feature;
 
+use GuzzleHttp\Exception\ClientException;
 use Mouadbnl\Judge0\Facades\Judge0;
 use Mouadbnl\Judge0\Models\Submission;
 use Mouadbnl\Judge0\Tests\TestCase;
@@ -83,5 +84,30 @@ class Judge0InstanceTest extends TestCase
         $res = Judge0::getWorkers();
 
         $this->assertEquals(200, $res['code']);
+    }
+
+    /* ------------------------------------------------------------------------------ */
+
+    /** @test */
+    public function thows_exception_on_failed_requests()
+    {
+        $this->expectException(ClientException::class);
+        config()->set('judge0.exception_on_failed_requests', true);
+
+        Judge0::sendRequest('GET', '/invalide_uri');
+
+        config()->set('judge0.exception_on_failed_requests', false);
+    }
+
+    /* ------------------------------------------------------------------------------ */
+
+    /** @test */
+    public function does_not_thow_exception_on_failed_requests()
+    {
+        config()->set('judge0.exception_on_failed_requests', false);
+
+        $res = Judge0::sendRequest('GET', '/invalide_uri');
+        
+        $this->assertEquals(404, $res['code']);
     }
 }
