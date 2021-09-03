@@ -57,7 +57,7 @@ return [
                     'method' => 'GET',
                     'uri' => '/languages'
                 ],
-                'getLanguages' => [
+                'getLanguage' => [
                     'method' => 'GET',
                     'uri' => '/languages/{id}'
                 ],

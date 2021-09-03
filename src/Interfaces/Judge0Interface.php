@@ -65,7 +65,7 @@ interface Judge0Interface
     /**
      * Getting all language available in Judge0
      */
-    public function getAllLanguages();
+    // public function getAllLanguages();
 
     /**
      * Getting a language from judge API
@@ -88,9 +88,9 @@ interface Judge0Interface
 
     public function getStatuses();
 
-    public function getStatistics();
+    // public function getStatistics();
     
-    public function getWorkers();
+    // public function getWorkers();
     
     // public function getConfig();
 
