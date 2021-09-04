@@ -5,14 +5,41 @@ use Mouadbnl\Judge0\Services\Judge0RapidapiService;
 
 return [
 
-    'resubmit_judged_submission' => false,
-    'throw_error_on_resubmit' => true,
-    'lock_submisson_after_judging' => false,
-
-    'exception_on_failed_requests' => true,
-
+    /**
+     * This allows to choose which service/driver to use as the Judge0 by default.
+     * The drivers load Base URI, API key, and headers needed to send a request.
+     * You can find the provided drivers in the drivers key in this config.
+     * You can also add you own drivers.
+     */
     'default' => 'instance',
 
+    /**
+     * Define wheter to allow rejudging og a submission after is has been judged
+     */
+    'resubmit_judged_submission' => false,
+
+    /**
+     * If you disable resubmitting, this allows to choose wheter to throw an exception, or just return the judged submission
+     */
+    'throw_error_on_resubmit' => true,
+
+    /**
+     * Allows you to lock any changes in the submission after it has been judged
+     * the last changes made to a submission are done in the submit method
+     */
+    'lock_submisson_after_judging' => false,
+
+    /**
+     * The Guzzle package throws an error if a request fails.
+     * this allows you to choose wheter to throw the Guzzle client exception or return a formated response
+     */
+    'exception_on_failed_requests' => true,
+
+    /**
+     * Drivers used to communicate with the API service.
+     * Notice that each driver is slightly different, so each one must be associated to a class.
+     * Those classes imlements the Judge0Interface
+     */
     'drivers' => [
 
         'rapidapi' => [
@@ -172,6 +199,10 @@ return [
 
     ],
 
+    /**
+     * This defines the default configuration to be sent with a submission
+     * more details here https://github.com/MouadBNL/laravel-judge0/blob/main/docs/submission_config.md
+     */
     'submission_config' => [
         'cpu_time_limit' => 2,
         'cpu_extra_time' => 1,
@@ -193,12 +224,19 @@ return [
         'additional_files' => null,
     ],
 
+    /**
+     * This defines the default parameters to be sent with a submission as a url query
+     * more details here https://github.com/MouadBNL/laravel-judge0/blob/main/docs/submission_config.md
+     */
     'submission_params' => [
         'base64' => true,
         'wait' => true,
         'fields' => '*'
     ],
 
+    /**
+     * Define the table names to be used. so it does not collide with any tables you may have made.
+     */
     'table_names' => [
         'submissions' => 'submissions',
         'statuses'    => 'judge0_statuses',
