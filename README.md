@@ -83,7 +83,25 @@ $user->submissions()->create([
     ->setMemoryLimitInMegabytes(256)
     ->submit();
 ```
-
+## Define the API to use
+This package provides two drivers to connect to judge0 API
+### Instance Driver
+This allows you to connect to a judge0 Docker instance. to do so please define the `JUDGE0_BASE_URI` which is the url to your instance and `JUDGE0_KEY` which it the API key to authenticate in your `environment variables` or `.env` file.
+```bash
+JUDGE0_BASE_URI=localhost:2358
+JUDGE0_KEY=yout_key
+```
+### Rapidapi Driver
+This allows you to connect to the the [Judge0 app on RapidAPI](https://rapidapi.com/judge0-official/api/judge0-ce/).
+For this you need to define the following in your `environment variables` or `.env` file. 
+- `JUDGE0_RAPIDAPI_BASE_URI` the rapidapi url to make the requests to, which it by default `https://judge0-ce.p.rapidapi.com`.
+- `JUDGE0_RAPIDAPI_HOST`, by default it is `judge0-ce.p.rapidapi.com`.
+- `JUDGE0_RAPIDAPI_KEY` yout rapidapi key.
+```bash
+JUDGE0_RAPIDAPI_BASE_URI=https://judge0-ce.p.rapidapi.com
+JUDGE0_RAPIDAPI_HOST=judge0-ce.p.rapidapi.com
+JUDGE0_RAPIDAPI_KEY=yout_key
+```
 ## Testing
 
 ```bash
