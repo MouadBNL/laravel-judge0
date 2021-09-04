@@ -25,8 +25,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Mouadbnl\\Judge0\\": "src",
-            "Mouadbnl\\Judge0\\Database\\Factories\\": "database/factories"
+            "Mouadbnl\\Judge0\\": "src"
         }
     },
     "autoload-dev": {

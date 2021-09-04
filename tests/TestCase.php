@@ -24,7 +24,7 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        include_once __DIR__.'/../database/migrations/create_judge0_tables.php';
+        include_once __DIR__.'/../database/migrations/create_judge0_tables.php.stub';
         (new \CreateJudge0Tables)->up();
 
         $migration = include __DIR__.'/../database/migrations/create_users_table.php.stub';
