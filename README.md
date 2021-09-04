@@ -41,7 +41,7 @@ php artisan migrate
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Mouadbnl\Judge0\Judge0ServiceProvider" --tag="package_slug-config"
+php artisan vendor:publish --provider="Mouadbnl\Judge0\Judge0ServiceProvider" --tag="judge0-config"
 ```
 
 ## Usage
