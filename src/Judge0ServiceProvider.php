@@ -43,7 +43,7 @@ class Judge0ServiceProvider extends ServiceProvider
             ], 'judge0-config');
 
             $this->publishes([
-                __DIR__.'/../database/migrations/create_users_table.php.stub' => database_path('migrations/'. date("Y-m-d_His") .'_create_users_table.php'),
+                __DIR__.'/../database/migrations/create_judge0_tables.php' => database_path('migrations/'. date("Y-m-d_His") .'_create_judge0_tables.php'),
             ], 'judge0-migrations');
 
         }
