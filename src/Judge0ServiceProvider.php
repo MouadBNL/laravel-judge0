@@ -2,6 +2,8 @@
 
 namespace Mouadbnl\Judge0;
 
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Mouadbnl\Judge0\Commands\ImportLanguages;
 use Mouadbnl\Judge0\Commands\ImportStatuses;
@@ -43,11 +45,31 @@ class Judge0ServiceProvider extends ServiceProvider
             ], 'judge0-config');
 
             $this->publishes([
-                __DIR__.'/../database/migrations/create_judge0_tables.php.stub' => database_path('migrations/'. date("Y-m-d_His") .'_create_judge0_tables.php'),
+                __DIR__.'/../database/migrations/create_judge0_tables.php.stub' => $this->getMigrationFileName('create_judge0_tables.php'),
             ], 'judge0-migrations');
 
         }
 
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+    }
+
+
+    /**
+     * Returns existing migration file if found, else uses the current timestamp.
+     *
+     * @return string
+     */
+    protected function getMigrationFileName($migrationFileName): string
+    {
+        $timestamp = date('Y_m_d_His');
+
+        $filesystem = $this->app->make(Filesystem::class);
+
+        return Collection::make($this->app->databasePath().DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR)
+            ->flatMap(function ($path) use ($filesystem, $migrationFileName) {
+                return $filesystem->glob($path.'*_'.$migrationFileName);
+            })
+            ->push($this->app->databasePath()."/migrations/{$timestamp}_{$migrationFileName}")
+            ->first();
     }
 }
