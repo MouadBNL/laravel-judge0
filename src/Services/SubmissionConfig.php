@@ -7,7 +7,7 @@ use InvalidArgumentException;
 
 class SubmissionConfig
 {
-    protected $configKeys = [
+    public const CONFIG_KEYS = [
         'cpu_time_limit'                                => ['float', 'integer', 'double'],
         'cpu_extra_time'                                => ['float', 'integer', 'double'],
         'wall_time_limit'                               => ['float', 'integer', 'double'],
@@ -34,7 +34,7 @@ class SubmissionConfig
 
     public function __construct(array $config)
     {
-        foreach ($this->configKeys as $key => $types) {
+        foreach (self::CONFIG_KEYS as $key => $types) {
             $value = $config[$key] ?? config('judge0.submission_config.' . $key);
             $this->valdiateKeyValue($key, $value);
             $this->config[$key] = $value;
@@ -89,12 +89,12 @@ class SubmissionConfig
 
     protected function valdiateKeyValue(string $key, $value)
     {
-        if(! array_key_exists($key, $this->configKeys))
+        if(! array_key_exists($key, self::CONFIG_KEYS))
         {
             throw new InvalidArgumentException("SubmissionConfig does not contain ". $key .".");
         }
 
-        $types = $this->configKeys[$key];
+        $types = self::CONFIG_KEYS[$key];
         $type = strtolower(gettype($value));
         if(! in_array($type, $types)){
             throw new InvalidArgumentException("Invalid type, " . $key . " must be of type ". implode(', ', $types) .".");
