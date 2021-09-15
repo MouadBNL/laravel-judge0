@@ -204,4 +204,30 @@ class SubmissionTest extends TestCase
         $this->assertNotNull($sub1->response);
         $this->assertNotNull($sub2->response);
     }
+
+    /** @test */
+    public function it_does_contain_config_array()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->setConfig('cpu_time_limit', 1.2);
+
+        $submission = $submission->toArray();
+        $this->assertNotNull($submission['config_array']);
+        $this->assertEquals(1.2, $submission['config_array']['cpu_time_limit']);
+    }
+
+    /** @test */
+    public function it_does_contain_params_array()
+    {
+        $submission = Submission::create([
+            'language_id' => 71,
+            'source_code' => "print('hello world')"
+        ])->setParams('base64', false);
+
+        $submission = $submission->toArray();
+        $this->assertNotNull($submission['params_array']);
+        $this->assertEquals(false, $submission['params_array']['base64']);
+    }
 }

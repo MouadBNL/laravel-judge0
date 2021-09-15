@@ -17,6 +17,14 @@ class Submission extends Model
         'config' => null,
         'params' => null,
     ];
+
+    protected $hidden = [
+        'config', 'params'
+    ];
+
+    protected $appends = [
+        'config_array', 'params_array'
+    ];
     
     protected $guarded = ['id'];
 
@@ -179,6 +187,22 @@ class Submission extends Model
     | any other location as required by the application or its packages.
     |
     */
+
+    /**
+     * Appended config_array
+     */
+    public function getConfigArrayAttribute()
+    {
+        return $this->config->getConfig();
+    }
+
+    /**
+     * Appended params_array
+     */
+    public function getParamsArrayAttribute()
+    {
+        return $this->params->getParams();
+    }
 
     /**
      * @param string $key The config key to get
