@@ -9,7 +9,7 @@ class SubmissionParams
     /**
      * @property array $paramKeys the keys availabe to get|change
      */
-    protected array $paramsKeys = [
+    public const PARAMS_KEY = [
         'base64' => ['boolean'],
         'wait' => ['boolean'],
         'fields' => ['string']
@@ -29,7 +29,7 @@ class SubmissionParams
      */
     public function __construct(array $params = [])
     {
-        foreach ($this->paramsKeys as $key => $types) {
+        foreach (self::PARAMS_KEY as $key => $types) {
             $value = $params[$key] ?? config('judge0.submission_params.' . $key);
             $this->valdiateKeyValue($key, $value);
             $this->params[$key] = $value;
@@ -92,12 +92,12 @@ class SubmissionParams
 
     protected function valdiateKeyValue(string $key, $value)
     {
-        if(! array_key_exists($key, $this->paramsKeys))
+        if(! array_key_exists($key, self::PARAMS_KEY))
         {
             throw new InvalidArgumentException("SubmissionParams does not contain ". $key .".");
         }
 
-        $types = $this->paramsKeys[$key];
+        $types = self::PARAMS_KEY[$key];
         $type = strtolower(gettype($value));
         if(! in_array($type, $types)){
             throw new InvalidArgumentException("Invalid type, " . $key . " must be of type ". implode(', ', $types) .".");
