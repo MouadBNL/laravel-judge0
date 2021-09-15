@@ -53,8 +53,8 @@ $params->getUrl(); // ?base64_encode=true&wait=true&fields=*
 ```
 
 ## Using an instance of the parameters on a submission
-By default, any submission created will have a new instance of the submission config.
-if you want to change the instance, all you need to do is to affect the instance you created to the `config` attribute of the submission:
+By default, any submission created will have a new instance of the `SubmissionParams`.
+if you want to change the instance, all you need to do is to affect the instance you created to the `params` attribute of the submission:
 ```php
 $submission->params = SubmissionParams::init([
     'wait' => true
@@ -67,4 +67,34 @@ $submission->setParams('wait', true)
         'base64' => true,
         'fields' => '*'
     ]);
+```
+
+## Validation
+This package provide two ways for validating the params.
+First, is by vilidating each key of the params.
+```php
+use Mouadbnl\Judge0\Validators\ValideParamsKey;
+validator([
+    'params' => [
+        'cpu_time_limit' => 1.2,
+        'memory_limit' => 20480
+    ],
+    [
+        'params.*' => ['required', new ValideParamsKey]
+    ]
+]);
+```
+Or, validate the whole array with one rule.
+**The Following rule check key by key, if a key is missing, it is ignored since it will be loaded with a default value fron the configuration file**.
+```php
+use Mouadbnl\Judge0\Validators\ValideParams;
+validator([
+    'params' => [
+        'cpu_time_limit' => 1.2,
+        'memory_limit' => 20480
+    ],
+    [
+        'params' => [new ValideParams]
+    ]
+]);
 ```

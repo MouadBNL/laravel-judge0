@@ -63,7 +63,7 @@ $conf->getConfig(); // return an array containing all the config.
 
 
 ## Using an instance of the configuration on a submission
-By default, any submission created will have a new instance of the submission config.
+By default, any submission created will have a new instance of the `SubmissionConfig`.
 if you want to change the instance, all you need to do is to affect the instance you created to the `config` attribute of the submission:
 ```php
 $submission->config = SubmissionConfig::init([
@@ -76,4 +76,34 @@ $submission->setConfig('cpu_time_limit', 1.2)
     ->setConfig([
         'memory_limit' => 10240
     ]);
+```
+
+## Validation
+This package provide two ways for validating the config.
+First, is by vilidating each key of the config.
+```php
+use Mouadbnl\Judge0\Validators\ValideConfigKey;
+validator([
+    'config' => [
+        'cpu_time_limit' => 1.2,
+        'memory_limit' => 20480
+    ],
+    [
+        'config.*' => ['required', new ValideConfigKey]
+    ]
+]);
+```
+Or, validate the whole array with one rule.
+**The Following rule check key by key, if a key is missing, it is ignored since it will be loaded with a default value fron the configuration file**.
+```php
+use Mouadbnl\Judge0\Validators\ValideConfig;
+validator([
+    'config' => [
+        'cpu_time_limit' => 1.2,
+        'memory_limit' => 20480
+    ],
+    [
+        'config' => [new ValideConfig]
+    ]
+]);
 ```
