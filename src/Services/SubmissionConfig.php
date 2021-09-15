@@ -91,7 +91,7 @@ class SubmissionConfig
     {
         if(! array_key_exists($key, $this->configKeys))
         {
-            throw new InvalidArgumentException("SubmissionParams does not contain ". $key .".");
+            throw new InvalidArgumentException("SubmissionConfig does not contain ". $key .".");
         }
 
         $types = $this->configKeys[$key];
