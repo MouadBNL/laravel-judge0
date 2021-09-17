@@ -69,7 +69,10 @@ class Submission extends Model
         if(! $this->canBeRejudged()) return $this;
         $res = Judge0::postSubmission($this);
 
-        if($res['code'] != 201){
+        if($res['code'] < 200 or $res['code'] >= 300){
+            $this->update([
+                'response' => $res
+            ]);
             throw new Exception("The judge had an error processeing your request");
         }
 
