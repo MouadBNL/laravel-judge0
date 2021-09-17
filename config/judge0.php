@@ -48,6 +48,8 @@ return [
 
             'base_uri' => env('JUDGE0_RAPIDAPI_BASE_URI', 'https://judge0-ce.p.rapidapi.com'),
 
+            'timeout' => 30.0,
+
             'headers' => [
                 'x-rapidapi-host' => env('JUDGE0_RAPIDAPI_HOST', 'judge0-ce.p.rapidapi.com'),
                 'x-rapidapi-key' => env('JUDGE0_RAPIDAPI_KEY', null)
@@ -109,6 +111,8 @@ return [
             'class' => Judge0InstanceAPIService::class,
 
             'base_uri' => env('JUDGE0_BASE_URI', 'localhost:2358'),
+
+            'timeout' => 30.0,
 
             'headers' => [
                 'X-Auth-Token' => env('JUDGE0_KEY', null)

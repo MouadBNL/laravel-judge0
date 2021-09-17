@@ -17,7 +17,7 @@ class Judge0RapidapiService implements Judge0Interface
     {
         $this->client = new Client([
             'base_uri' => config('judge0.drivers.rapidapi.base_uri'),
-            'timeout' => 5.0,
+            'timeout' => config('judge0.drivers.rapidapi.timeout', 30.0),
             'headers' => config('judge0.drivers.rapidapi.headers')
         ]);
         $this->endpoints = config('judge0.drivers.rapidapi.endpoints');

@@ -17,7 +17,7 @@ class Judge0InstanceAPIService implements Judge0Interface
     {
         $this->client = new Client([
             'base_uri' => config('judge0.drivers.instance.base_uri'),
-            'timeout' => 5.0,
+            'timeout' => config('judge0.drivers.instance.timeout', 30.0),
             'headers' => config('judge0.drivers.instance.headers')
         ]);
         $this->endpoints = config('judge0.drivers.instance.endpoints');
